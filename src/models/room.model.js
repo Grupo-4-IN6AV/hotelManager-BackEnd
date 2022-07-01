@@ -8,8 +8,8 @@ const roomSchema = mongoose.Schema
         name: String,
         description: String,
         price:Number,
-        stock: Number,
-        stockReserved: Number,        
+        dateAvailable: Date,
+        state: Boolean,      
         typeRoom: {type: mongoose.Schema.ObjectId, ref : 'TypeRoom'},
         hotel: {type: mongoose.Schema.ObjectId, ref : 'Hotel'}
     }
