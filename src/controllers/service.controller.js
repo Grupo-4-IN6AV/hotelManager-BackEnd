@@ -21,7 +21,6 @@ exports.saveService  = async (req, res)=>{
             price: params.price,
             hotel: params.hotel,
         };
-        console.log(data)
         const msg = validateData(data);
 
         if(msg) return res.status(400).send(msg);
@@ -65,7 +64,7 @@ exports.getService = async (req, res)=>{
     try
     {
         const serviceId = req.params.id
-        const service = await Service.findOne({_id: serviceId});
+        const service = await Service.findOne({_id: serviceId}).populate('hotel');
         if (!service) return res.send({message: 'Service not found'})
         return res.send({message: 'Service:', service})
     }catch(err){
@@ -97,11 +96,11 @@ exports.updateService= async (req, res)=>{
             const serviceExist = await Service.findOne({_id: serviceId});
             if(!serviceExist) return res.status.send({message: 'Service  not found'});
 
-            let alreadyName = await Service.findOne({name: data.name});
+            let alreadyName = await Service.findOne({$and:[{name: data.name},{hotel: serviceExist.hotel}]});
                 if(alreadyName && serviceExist.name != data.name) return res.status(400).send({message: 'Service Already Exist'});
     
             const updatedService = await Service.findOneAndUpdate({_id: serviceId}, data, {new: true});
-            return res.send({message: 'Update Service', updatedService});
+            return res.send({message: 'Service updated Successfully', updatedService});
 
         }else return res.status(400).send({message: 'Some parameter is empty'})
 
@@ -122,7 +121,7 @@ exports.deleteService= async (req, res)=>{
         if(!serviceExist) return res.status(400).send({message: 'Service not found or already deleted.'});     
 
         const serviceDeletd = await Service.findOneAndDelete({_id: serviceId});
-        return res.send({message: 'Delete Service.', serviceDeletd });
+        return res.send({message: 'Service deleted Successfully', serviceDeletd });
           
     }catch(err){
         console.log(err); 
