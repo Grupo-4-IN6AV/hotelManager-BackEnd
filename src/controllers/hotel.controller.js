@@ -135,11 +135,11 @@ exports.updateHotel= async (req, res)=>{
             const adminExist = await User.findOne({_id: data.admin});
             if(!adminExist) return res.status.send({message: 'Admin not found'});
 
-            let alreadyName = await Hotel.findOne({name: data.name});
+            let alreadyName = await Hotel.findOne({$and:[{name: data.name},{admin: data.admin}]});
                 if(alreadyName && hotelExist.name != data.name) return res.status(400).send({message: 'Hotel Already Exist'});
     
             const updatedHotel= await Hotel.findOneAndUpdate({_id: hotelId}, data, {new: true});
-            return res.send({message: 'Hotel updated successfully', updatedHotel});
+            return res.send({message: 'Hotel updated Successfully', updatedHotel});
 
         }else return res.status(400).send({message: 'Some parameter is empty'})
 

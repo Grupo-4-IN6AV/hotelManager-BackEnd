@@ -8,6 +8,8 @@ const User = require('../src/models/user.model');
 
 //Importación de las Rutas//
 const userRoutes = require('../src/routes/user.routes');
+const hotelRoutes = require('../src/routes/hotel.routes');
+const serviceRoutes = require('../src/routes/service.routes');
 
 const bodyParser = require('body-parser');
 const express = require('express');
@@ -25,6 +27,8 @@ app.use(cors());
 
 //USO DE RUTAS//
 app.use('/user', userRoutes);
+app.use('/hotel', hotelRoutes);
+app.use('/service', serviceRoutes);
 
 
 exports.initServer = ()=> app.listen(port, async ()=>
