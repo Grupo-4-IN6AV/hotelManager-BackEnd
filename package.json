@@ -1,0 +1,33 @@
+{
+  "name": "hotelmanager",
+  "version": "1.0.0",
+  "description": "API - Hotels Manager and Reservations.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Grupo-4-IN6AV/hotelManager-BackEnd.git"
+  },
+  "author": "Grupo 4 - IN6AV",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Grupo-4-IN6AV/hotelManager-BackEnd/issues"
+  },
+  "homepage": "https://github.com/Grupo-4-IN6AV/hotelManager-BackEnd#readme",
+  "dependencies": {
+    "bcrypt-nodejs": "^0.0.3",
+    "body-parser": "^1.20.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
+    "helmet": "^5.1.0",
+    "jwt-simple": "^0.5.6",
+    "moment": "^2.29.3",
+    "mongoose": "^6.4.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.18"
+  }
+}
