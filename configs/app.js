@@ -10,6 +10,7 @@ const User = require('../src/models/user.model');
 const userRoutes = require('../src/routes/user.routes');
 const hotelRoutes = require('../src/routes/hotel.routes');
 const serviceRoutes = require('../src/routes/service.routes');
+const contactRoutes = require('../src/routes/contact.routes')
 
 const bodyParser = require('body-parser');
 const express = require('express');
@@ -29,6 +30,7 @@ app.use(cors());
 app.use('/user', userRoutes);
 app.use('/hotel', hotelRoutes);
 app.use('/service', serviceRoutes);
+app.use('/contact', contactRoutes);
 
 
 exports.initServer = ()=> app.listen(port, async ()=>
