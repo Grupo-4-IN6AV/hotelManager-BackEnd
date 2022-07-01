@@ -6,6 +6,9 @@ const {encrypt} = require('../src/utils/validate');
 //Importación del Modelo de Usuario//
 const User = require('../src/models/user.model');
 
+//Importación de las Rutas//
+const userRoutes = require('../src/routes/user.routes');
+
 const bodyParser = require('body-parser');
 const express = require('express');
 const helmet = require('helmet');
@@ -18,6 +21,10 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(helmet({}));
 app.use(cors());
+
+
+//USO DE RUTAS//
+app.use('/user', userRoutes);
 
 
 exports.initServer = ()=> app.listen(port, async ()=>
