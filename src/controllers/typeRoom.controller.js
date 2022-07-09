@@ -1,6 +1,7 @@
 'use strict'
 
 const TypeRoom = require('../models/typeRoom.model');
+const Hotel = require('../models/hotel.model')
 const { validateData, checkUpdated} = require('../utils/validate');
 
 
@@ -19,14 +20,17 @@ exports.saveTypeRoom  = async (req, res)=>{
         const data = {
             name: params.name,
             description: params.name,
-            
+            numberPersons: params.numberPersons,
+            hotel: params.hotel
         };
-        console.log(data)
         const msg = validateData(data);
         if(msg)
             return res.status(400).send(msg);
         
-        const existTypeRoom = await TypeRoom.findOne({name: params.name});
+        const hotelExist = await Hotel.findOne({_id: data.hotel});
+        if(!hotelExist) return res.send({message: 'Hotel not found'});
+
+        const existTypeRoom = await TypeRoom.findOne({$and:[{name: data.name},{hotel:data.hotel}]});
         if(!existTypeRoom){
             const typeRoom= new TypeRoom(data);
             await typeRoom.save();
@@ -45,8 +49,9 @@ exports.saveTypeRoom  = async (req, res)=>{
 //Mostrar todos los Tipos de Habitación//
 exports.getTypeRooms = async (req, res)=>{
     try{
-        const typeRoom = await TypeRoom.find();
-        return res.send({message: 'TypeRoom:', typeRoom})
+        const hotelId = req.params.idHotel;
+        const typeRooms = await TypeRoom.find({hotel: hotelId}).populate();
+        return res.send({message: 'TypeRoom:', typeRooms})
     }catch(err){
         console.log(err); 
         return err; 
@@ -59,7 +64,7 @@ exports.getTypeRoom = async (req, res)=>{
     try
     {
         const typeRoomId = req.params.id
-        const typeRoom = await TypeRoom.findOne({_id: typeRoomId});
+        const typeRoom = await TypeRoom.findOne({_id: typeRoomId}).populate('hotel');
         return res.send({message: 'TypeRoom:', typeRoom})
     }catch(err){
         console.log(err); 
@@ -84,7 +89,7 @@ exports.updateTypeRoom = async (req, res)=>{
             const typeRoomExist = await TypeRoom.findOne({_id: typeRoomId});
             if(!typeRoomExist) return res.status.send({message: 'TypeRoom not found'});
 
-            let alreadyName = await TypeRoom.findOne({name: params.name});
+            let alreadyName = await TypeRoom.findOne({$and:[{name: params.name},{hotel: params.hotel}]});
                 if(alreadyName && typeRoomExist.name != params.name) return res.status(400).send({message: 'TypeRoom Already Exist'});
     
             const updatedTypeRoom = await TypeRoom.findOneAndUpdate({_id: typeRoomId}, params, {new: true});

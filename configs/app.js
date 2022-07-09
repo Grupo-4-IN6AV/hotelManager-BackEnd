@@ -11,6 +11,7 @@ const userRoutes = require('../src/routes/user.routes');
 const hotelRoutes = require('../src/routes/hotel.routes');
 const serviceRoutes = require('../src/routes/service.routes');
 const contactRoutes = require('../src/routes/contact.routes')
+const typeRoomRoutes = require('../src/routes/typeRoom.routes')
 
 const bodyParser = require('body-parser');
 const express = require('express');
@@ -31,6 +32,7 @@ app.use('/user', userRoutes);
 app.use('/hotel', hotelRoutes);
 app.use('/service', serviceRoutes);
 app.use('/contact', contactRoutes);
+app.use('/typeRoom', typeRoomRoutes);
 
 
 exports.initServer = ()=> app.listen(port, async ()=>
