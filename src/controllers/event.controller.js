@@ -21,9 +21,8 @@ exports.saveEvent  = async (req, res)=>{
             description: params.name,
             date: params.date,
             hotel: params.hotel,
-            typeEvent: params.typeEvent,
+            //typeEvent: params.typeEvent,
         };
-        console.log(data)
         const msg = validateData(data);
 
         if(msg) return res.status(400).send(msg);
@@ -31,14 +30,14 @@ exports.saveEvent  = async (req, res)=>{
         const hotelExist = await Hotel.findOne({_id: data.hotel});
         if(!hotelExist) return res.send({message: 'Hotel not found'});
 
-        const typeEventExist = await TypeEvent.findOne({_id: data.typeEvent});
-        if(!typeEventExist) return res.send({message: 'TypeEvent not found'});
+        //const typeEventExist = await TypeEvent.findOne({_id: data.typeEvent});
+        //if(!typeEventExist) return res.send({message: 'TypeEvent not found'});
 
         const existEvent = await Event.findOne({ $and: [{name: data.name}, {hotel: data.hotel}]});
         if(!existEvent){
             const event= new Event(data);
             await event.save();
-            return res.send({message: 'Event saved', event});
+            return res.send({message: 'Event saved Successfully', event});
         }else return res.status(400).send({message: 'Event already exist'});
     
     }catch(err){
@@ -53,8 +52,8 @@ exports.saveEvent  = async (req, res)=>{
 //Mostrar todos los Eventos//
 exports.getEvents = async (req, res)=>{
     try{
-        const events = await Event.find();
-        return res.send({message: 'Eventoss:', events})
+        const events = await Event.find().populate('hotel');
+        return res.send({message: 'Events:', events})
     }catch(err){
         console.log(err); 
         return err; 

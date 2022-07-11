@@ -10,6 +10,7 @@ const User = require('../src/models/user.model');
 const userRoutes = require('../src/routes/user.routes');
 const hotelRoutes = require('../src/routes/hotel.routes');
 const serviceRoutes = require('../src/routes/service.routes');
+const eventRoutes = require('../src/routes/event.routes');
 const contactRoutes = require('../src/routes/contact.routes')
 const typeRoomRoutes = require('../src/routes/typeRoom.routes')
 
@@ -31,6 +32,7 @@ app.use(cors());
 app.use('/user', userRoutes);
 app.use('/hotel', hotelRoutes);
 app.use('/service', serviceRoutes);
+app.use('/event', eventRoutes);
 app.use('/contact', contactRoutes);
 app.use('/typeRoom', typeRoomRoutes);
 

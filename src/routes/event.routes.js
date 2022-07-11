@@ -12,9 +12,9 @@ const mdAuth = require('../middlewares/authenticated');
 api.get('/testEvent', eventController.testEvent);
 
 //Admin Hotel//
-api.post('/saveEvent', [mdAuth.ensureAuth, mdAuth.isAdminHotel], eventController.saveEvent);
+api.post('/saveEvent', [mdAuth.ensureAuth, mdAuth.isAdmin], eventController.saveEvent);
 api.get('/getEvent/:id', [mdAuth.ensureAuth, mdAuth.isAdminHotel], eventController.getEvent);
-api.get('/getEvents', [mdAuth.ensureAuth, mdAuth.isAdminHotel], eventController.getEvents);
+api.get('/getEvents', [mdAuth.ensureAuth, mdAuth.isAdmin], eventController.getEvents);
 api.post('/updateEvent/:id', [mdAuth.ensureAuth, mdAuth.isAdminHotel], eventController.updateEvent);
 api.delete('/deteleEvent/:id', [mdAuth.ensureAuth, mdAuth.isAdminHotel], eventController.deleteEvent);
 

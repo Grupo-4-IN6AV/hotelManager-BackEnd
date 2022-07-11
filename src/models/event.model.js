@@ -7,7 +7,7 @@ const eventSchema = mongoose.Schema
         name: String,
         description: String,
         date: Date,
-        typeEvent: {type: mongoose.Schema.ObjectId, ref : 'TypeEvent'},
+        //typeEvent: {type: mongoose.Schema.ObjectId, ref : 'TypeEvent'},
         hotel: {type: mongoose.Schema.ObjectId, ref : 'Hotel'},
     }
 );
