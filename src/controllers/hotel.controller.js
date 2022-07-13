@@ -82,9 +82,35 @@ exports.getHotel = async (req, res)=>{
 exports.getHotelName = async (req, res)=>{
     try{
         const params = req.body;
-        const hotel = await Hotel.find({name: {$regex: params.name, $options: 'i'}});
-        if (!hotel) return res.send({message: 'Hotel not found'})
-        return res.send({message: 'Hotels:', hotel})
+        const hotels = await Hotel.find({name: {$regex: params.name, $options: 'i'}});
+        if (!hotels) return res.send({message: 'Hotel not found'})
+        return res.send({message: 'Hotels:', hotels})
+    }catch(err){
+        console.log(err); 
+        return err; 
+    }
+}
+
+
+//Mostrar un  Hotel por Nombre//
+exports.getHotelsNameUp = async (req, res)=>{
+    try
+    {
+        const hotels = await Hotel.find().sort({name: 'asc'});
+        return res.send({hotels});
+    }catch(err){
+        console.log(err); 
+        return err; 
+    }
+}
+
+
+//Mostrar un  Hotel por Nombre//
+exports.getHotelsNameDown = async (req, res)=>{
+    try
+    {
+        const hotels = await Hotel.find().sort({name: 'desc'});
+        return res.send({hotels});
     }catch(err){
         console.log(err); 
         return err; 
