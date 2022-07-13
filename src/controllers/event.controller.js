@@ -21,8 +21,10 @@ exports.saveEvent  = async (req, res)=>{
             description: params.name,
             date: params.date,
             hotel: params.hotel,
-            //typeEvent: params.typeEvent,
+            startHour: params.startHour,
+            endHour: params.endHour
         };
+
         const msg = validateData(data);
 
         if(msg) return res.status(400).send(msg);
@@ -30,8 +32,11 @@ exports.saveEvent  = async (req, res)=>{
         const hotelExist = await Hotel.findOne({_id: data.hotel});
         if(!hotelExist) return res.send({message: 'Hotel not found'});
 
-        //const typeEventExist = await TypeEvent.findOne({_id: data.typeEvent});
-        //if(!typeEventExist) return res.send({message: 'TypeEvent not found'});
+        const endHour = new Date(data.date+'T'+data.endHour+':00Z');
+        const startHour = new Date(data.date+'T'+data.startHour+':00Z');
+
+        if(startHour > endHour)
+            return res.status(400).send('Event Hours are not Correct')
 
         const existEvent = await Event.findOne({ $and: [{name: data.name}, {hotel: data.hotel}]});
         if(!existEvent){
@@ -66,10 +71,12 @@ exports.getEvent = async (req, res)=>{
     try
     {
         const eventId = req.params.id
-        const event = await Event.findOne({_id: eventId});
+        const event = await Event.findOne({_id: eventId}).populate('hotel');
         if (!event) return res.send({message: 'Event not found'})
         return res.send({message: 'Event:', event})
-    }catch(err){
+    }
+    catch(err)
+    {
         console.log(err); 
         return err; 
     }

@@ -14,8 +14,11 @@ api.get('/testHotel', hotelController.testHotel);
 
 //Admin Hotel//
 api.post('/saveHotel', [mdAuth.ensureAuth, mdAuth.isAdmin], hotelController.saveHotel);
-api.get('/getHotel/:id', [mdAuth.ensureAuth, mdAuth.isAdmin], hotelController.getHotel);
-api.get('/getHotels', [mdAuth.ensureAuth, mdAuth.isAdmin], hotelController.getHotels);
+api.get('/getHotel/:id', hotelController.getHotel);
+api.get('/getHotels',  hotelController.getHotels);
+api.post('/getHotelName',  hotelController.getHotelName);
+api.get('/getHotelsNameUp',  hotelController.getHotelsNameUp);
+api.get('/getHotelsNameDown',  hotelController.getHotelsNameDown);
 api.put('/updateHotel/:id', [mdAuth.ensureAuth, mdAuth.isAdmin], hotelController.updateHotel);
 api.delete('/deleteHotel/:id', [mdAuth.ensureAuth, mdAuth.isAdmin], hotelController.deleteHotel);
 
