@@ -23,7 +23,7 @@ exports.saveHotel  = async (req, res)=>{
         const params = req.body; 
         const data = {
             name: params.name,
-            description: params.name,
+            description: params.description,
             address: params.address,
             email: params.email,
             phone: params.phone,
@@ -142,7 +142,7 @@ exports.updateHotel= async (req, res)=>{
 
         const data = {
             name: params.name,
-            description: params.name,
+            description: params.description,
             address: params.address,
             email: params.email,
             phone: params.phone,
