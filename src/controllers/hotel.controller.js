@@ -187,14 +187,19 @@ exports.deleteHotel= async (req, res)=>{
 
         const eventExist = await Event.find({hotel: hotelId});
         for(let eventDeleted of eventExist){
-            const eventDeleted = await Event.findOneAndDelete({ hotel: hotelId});
-            
+            const deleteEvent = await Event.findOneAndDelete({ hotel: hotelId});
         }
 
         const roomExist = await Room.find({hotel: hotelId});
-        for(let roomDeleted of roomExist){
-            const roomDeleted = await Room.findOneAndDelete({ hotel: hotelId});
-            
+        for(let roomDeleted of roomExist)
+        {
+            const deleteRoom = await Room.findOneAndDelete({ hotel: hotelId});
+        }
+
+        const serviceExist = await Room.find({hotel: hotelId});
+        for(let serviceDeleted of serviceExist)
+        {
+            const deleteService = await Service.findOneAndDelete({ hotel: hotelId});
         }
         
         const reservationExist = await Reservation.find({hotel: hotelId});

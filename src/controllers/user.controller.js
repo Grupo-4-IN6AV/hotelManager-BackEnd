@@ -197,16 +197,12 @@ exports.searchUser = async (req, res)=>{
     try{
         const params = req.body;
         const data ={
-            username: params.username
+            name: params.name
         }
-
-        const msg = validateData(data);
-
-        if(!msg){
-            const user = await User.find({username: {$regex: params.username, $options:'i'}});
-            return res.send({message:'User Founds', user});
+    
+        const users = await User.find({name: {$regex: params.name, $options:'i'}});
+        return res.send({message:'User Founds', users});
             
-        }else return res.status(400).send(msg);
     }catch(err){
         console.log(err);
         return res.status(500).send({message: 'Error searching Users.', err});
