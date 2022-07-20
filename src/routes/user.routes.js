@@ -17,17 +17,17 @@ api.delete('/delete/:id', mdAuth.ensureAuth, userController.delete);
 
 //FUNCIONES PRIVADAS//
 //ADMIN//
-api.post('/saveUser', [mdAuth.ensureAuth, mdAuth.isAdmin], userController.saveUser);
-api.put('/updateUser/:id', [mdAuth.ensureAuth, mdAuth.isAdmin], userController.updateUser);
-api.delete('/deleteUser/:id', [mdAuth.ensureAuth, mdAuth.isAdmin], userController.deleteUser);
-api.get('/getUser/:id', mdAuth.ensureAuth, userController.getUser);
-api.post('/searchUser', [mdAuth.ensureAuth, mdAuth.isAdmin], userController.searchUser);
-api.get('/getUsers', [mdAuth.ensureAuth, mdAuth.isAdmin], userController.getUsers);
-api.get('/getUsersByUp', [mdAuth.ensureAuth, mdAuth.isAdmin], userController.getUsersByUp);
-api.get('/getUsersByDown', [mdAuth.ensureAuth, mdAuth.isAdmin], userController.getUsersByDown);
-api.get('/getUsersSurnameByUp', [mdAuth.ensureAuth, mdAuth.isAdmin], userController.getUsersSurnameByUp);
-api.get('/getUsersSurnameByDown', [mdAuth.ensureAuth, mdAuth.isAdmin], userController.getUsersSurnameByDown);
-api.get('/getUsersClient', [mdAuth.ensureAuth, mdAuth.isAdmin], userController.getUsersClient);
-api.get('/getUsersAdminHotel', [mdAuth.ensureAuth, mdAuth.isAdmin], userController.getUsersAdminHotel);
+api.post('/saveUser', userController.saveUser);
+api.put('/updateUser/:id',  userController.updateUser);
+api.delete('/deleteUser/:id', userController.deleteUser);
+api.get('/getUser/:id', userController.getUser);
+api.post('/searchUser',  userController.searchUser);
+api.get('/getUsers', userController.getUsers);
+api.get('/getUsersByUp', userController.getUsersByUp);
+api.get('/getUsersByDown', userController.getUsersByDown);
+api.get('/getUsersSurnameByUp',  userController.getUsersSurnameByUp);
+api.get('/getUsersSurnameByDown',  userController.getUsersSurnameByDown);
+api.get('/getUsersClient', userController.getUsersClient);
+api.get('/getUsersAdminHotel', userController.getUsersAdminHotel);
 
 module.exports = api;

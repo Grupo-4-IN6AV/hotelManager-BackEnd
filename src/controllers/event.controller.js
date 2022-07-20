@@ -26,15 +26,19 @@ exports.saveEvent  = async (req, res)=>{
         };
 
         const msg = validateData(data);
+            if(msg) return res.status(400).send(msg);
+        const stringHour = data.date
+        const actualDate = new Date();
+        const paramDate = new Date(params.date)
+        if (actualDate > paramDate)
+            return res.status(400).send({message: 'This Date not Correct'})
 
-        if(msg) return res.status(400).send(msg);
-            
+        data.date = paramDate
         const hotelExist = await Hotel.findOne({_id: data.hotel});
         if(!hotelExist) return res.send({message: 'Hotel not found'});
-
-        const endHour = new Date(data.date+'T'+data.endHour+':00Z');
-        const startHour = new Date(data.date+'T'+data.startHour+':00Z');
-
+        const compareHours = stringHour.split('T')
+        const endHour = new Date(compareHours[0]+'T'+data.endHour+':00Z');
+        const startHour = new Date(compareHours[0]+'T'+data.startHour+':00Z');
         if(startHour > endHour)
             return res.status(400).send('Event Hours are not Correct')
 
@@ -139,7 +143,21 @@ exports.updateEvent= async (req, res)=>{
     }
 }
 
-
+exports.searchEvents = async (req, res)=>{
+    try{
+        const params = req.body;
+        const data ={
+            name: params.name
+        }
+    
+        const events = await Event.find({name: {$regex: params.name, $options:'i'}});
+        return res.send({message:'Events Founds', events});
+            
+    }catch(err){
+        console.log(err);
+        return res.status(500).send({message: 'Error searching Users.', err});
+    }
+}
 
 
 //Eliminar un Evento //
