@@ -18,6 +18,6 @@ api.get('/getService/:id', [mdAuth.ensureAuth, mdAuth.isAdmin], serviceControlle
 api.get('/getServices', [mdAuth.ensureAuth, mdAuth.isAdmin], serviceController.getServices);
 api.put('/updateService/:id', [mdAuth.ensureAuth, mdAuth.isAdmin], serviceController.updateService);
 api.delete('/deleteService/:id', [mdAuth.ensureAuth, mdAuth.isAdmin], serviceController.deleteService);
-
+api.post('/searchService', serviceController.searchService);
 
 module.exports = api;

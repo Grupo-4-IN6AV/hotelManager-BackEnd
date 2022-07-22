@@ -13,6 +13,7 @@ const serviceRoutes = require('../src/routes/service.routes');
 const eventRoutes = require('../src/routes/event.routes');
 const contactRoutes = require('../src/routes/contact.routes')
 const typeRoomRoutes = require('../src/routes/typeRoom.routes')
+const roomRoutes = require('../src/routes/room.routes')
 
 const bodyParser = require('body-parser');
 const express = require('express');
@@ -35,6 +36,7 @@ app.use('/service', serviceRoutes);
 app.use('/event', eventRoutes);
 app.use('/contact', contactRoutes);
 app.use('/typeRoom', typeRoomRoutes);
+app.use('/room', roomRoutes);
 
 
 exports.initServer = ()=> app.listen(port, async ()=>

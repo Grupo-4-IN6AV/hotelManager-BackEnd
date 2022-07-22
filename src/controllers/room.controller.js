@@ -20,16 +20,30 @@ exports.testRoom = (req, res)=>{
 exports.saveRoom  = async (req, res)=>{
     try{
         const params = req.body; 
+        
+        const date = new Date();
+        const dateLocal = (date).toLocaleString('UTC', { timeZone: 'America/Guatemala' });
+        const splitDate = dateLocal.split(' ');
+        const splitDateOne = splitDate[0].split('/');
+        if (splitDateOne[0] < 10) 
+        {
+            splitDateOne[0] = '0' + splitDateOne[0];
+        }
+        if (splitDateOne[1] < 10) 
+        {
+            splitDateOne[1] = '0' + splitDateOne[1];
+        }
+        const setDate = splitDateOne[2]+'-'+splitDateOne[1]+'-'+splitDateOne[0];
+        const setDateRoom  = new Date(setDate);
         const data = {
             name: params.name,
-            description: params.name,
+            description: params.description,
             price: params.price,
-            dateAvailable: '',
+            dateAvailable: setDateRoom,
             state: 'false',
             typeRoom: params.typeRoom,
             hotel: params.hotel,
         };
-        console.log(data)
         const msg = validateData(data);
 
         if(msg) return res.status(400).send(msg);
@@ -59,7 +73,7 @@ exports.saveRoom  = async (req, res)=>{
 //Mostrar todas las Habitaciones//
 exports.getRooms = async (req, res)=>{
     try{
-        const rooms = await Room.find();
+        const rooms = await Room.find().populate('hotel typeRoom');
         return res.send({message: 'Rooms:', rooms})
     }catch(err){
         console.log(err); 
@@ -186,8 +200,6 @@ exports.updateRoom= async (req, res)=>{
 }
 
 
-
-
 //Eliminar una Habitación //
 exports.deleteRoom= async (req, res)=>{
     try{
@@ -197,17 +209,8 @@ exports.deleteRoom= async (req, res)=>{
         
         const reservationExist = await Reservation.find({room: roomId});
         for(let reservationDeleted of reservationExist){
-            const rooms = reservationDeleted.rooms;
-            console.log(rooms)
-            const dateNow = new Date();
-            const dateReservation = await Reservation.findOne({hotel: hotelId});
-            if(dateReservation.entryDate < dateNow ){
-                const reservationDeleted = await Reservation.findOneAndDelete({ hotel: hotelId});
-            }
-            if(dateNow < dateReservation.exitDate){
-                const reservationDeleted = await Reservation.findOneAndDelete({ hotel: hotelId});
-            }
-            
+            const reservationDeleted = await Reservation.findOneAndDelete({ hotel: hotelId});
+           
         }
 
         const roomDeleted = await Room.findOneAndDelete({_id: roomId});
