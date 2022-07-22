@@ -13,11 +13,13 @@ api.get('/testTypeRoom', typeRoomController.testTypeRoom);
 
 
 //Admin Hotel  CAMBIO DE RUTAS A IS ADMIN PARA PRUEBAS//
-api.post('/createTypeRoom', [mdAuth.ensureAuth, mdAuth.isAdmin], typeRoomController.saveTypeRoom);
+api.post('/saveTypeRoom', [mdAuth.ensureAuth, mdAuth.isAdmin], typeRoomController.saveTypeRoom);
 api.get('/getTypeRoom/:id', [mdAuth.ensureAuth, mdAuth.isAdmin], typeRoomController.getTypeRoom);
-api.get('/getTypeRooms/:idHotel', [mdAuth.ensureAuth, mdAuth.isAdmin], typeRoomController.getTypeRooms);
+api.get('/getTypesRoomsHotel/:id', [mdAuth.ensureAuth, mdAuth.isAdmin], typeRoomController.getTypeRoomsHotels);
 api.put('/updateTypeRoom/:id', [mdAuth.ensureAuth, mdAuth.isAdmin], typeRoomController.updateTypeRoom);
 api.delete('/deleteTypeRoom/:id', [mdAuth.ensureAuth, mdAuth.isAdmin], typeRoomController.deleteTypeRoom);
+api.get('/getTypesRooms', [mdAuth.ensureAuth, mdAuth.isAdmin], typeRoomController.getMasterTypesRooms);
+api.post('/searchTypeRooms', [mdAuth.ensureAuth, mdAuth.isAdmin], typeRoomController.searchTypesRooms);
 
 
 module.exports = api;

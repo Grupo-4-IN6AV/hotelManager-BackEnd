@@ -59,6 +59,20 @@ exports.getServices = async (req, res)=>{
 }
 
 
+
+//Mostrar todos los Tipos de Servicios//
+exports.searchService = async (req, res)=>{
+    try{
+        const params = req.body;
+        const services = await Service.find({name: {$regex: params.name, $options:'i'}});
+        return res.send({message: 'Services:', services})
+    }catch(err){
+        console.log(err); 
+        return err; 
+    }
+}
+
+
 //Mostrar un  Servicio//
 exports.getService = async (req, res)=>{
     try
