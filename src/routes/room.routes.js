@@ -5,8 +5,8 @@ const express = require('express');
 const api = express.Router();
 const mdAuth = require('../middlewares/authenticated');
 
-
 /*----------- R U T A S -----------*/
+
 
 //P Ú B L I C A S//
 api.get('/testRoom', roomController.testRoom);

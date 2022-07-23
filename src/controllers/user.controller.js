@@ -1,8 +1,13 @@
 'use strict'
 
 const User = require('../models/user.model');
-const {validateData, encrypt, alreadyUser, checkPassword, checkUpdate, checkPermission, checkUpdateAdmin} = require('../utils/validate');
+const {validateData, encrypt, alreadyUser, checkPassword, 
+    checkUpdate, checkPermission, checkUpdateAdmin, validExtension} = require('../utils/validate');
 const jwt = require('../services/jwt');
+
+//Connect Multiparty Upload Image//
+const fs = require('fs');
+const path = require('path');
 
 //FUNCIONES PÚBLICAS
 exports.userTest = async (req, res)=>{
@@ -306,5 +311,55 @@ exports.getUsersAdminHotel = async(req, res)=>
     catch(err){
         console.log(err)
         return res.status(500).send({ message: 'Error getting Users.', err});
+    }
+}
+
+//Función para agregar una IMG a una COMPANY
+exports.addImageUser=async(req,res)=>
+{
+    try
+    {
+        const userID = req.params.id;
+
+        const permission = await checkPermission(userID, req.user.sub);
+        if(permission === false) return res.status(401).send({message: 'You dont have permission to update this User.'});
+        if(!req.files.image || !req.files.image.type) return res.status(400).send({message: 'Havent sent image'});
+        
+        const filePath = req.files.image.path; 
+       
+        const fileSplit = filePath.split('\\'); 
+        const fileName = fileSplit[2]; 
+
+        const extension = fileName.split('\.'); 
+        const fileExt = extension[1]; 
+
+        const validExt = await validExtension(fileExt, filePath);
+        if(validExt === false) return res.status(400).send('Invalid extension');
+        const updateUser = await User.findOneAndUpdate({_id: userID}, {image: fileName});
+        if(!updateUser) return res.status(404).send({message: 'User not found'});
+        return res.send(updateUser);
+    }
+    catch(err)
+    {
+        console.log(err);
+        return res.status(500).send({err, message: 'Error Add Image User Company'});
+    }
+}
+
+exports.getImageUser = async(req, res)=>
+{
+    try
+    {
+        const fileName = req.params.fileName;
+        const pathFile = './uploads/users/' + fileName;
+
+        const image = fs.existsSync(pathFile);
+        if(!image) return res.status(404).send({message: 'Image not found'});
+        return res.sendFile(path.resolve(pathFile));
+    }
+    catch(err)
+    {
+        console.log(err);
+        return res.status(500).send({err, message: 'Error getting image'});
     }
 }

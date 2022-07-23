@@ -15,6 +15,10 @@ const contactRoutes = require('../src/routes/contact.routes')
 const typeRoomRoutes = require('../src/routes/typeRoom.routes')
 const roomRoutes = require('../src/routes/room.routes')
 
+/*Connect MultiParty*/
+const fs = require('fs')
+const path = require('path')
+
 const bodyParser = require('body-parser');
 const express = require('express');
 const helmet = require('helmet');
@@ -52,7 +56,6 @@ exports.initServer = ()=> app.listen(port, async ()=>
         password: await encrypt('hotel123'),
         role: 'ADMIN'
     }
-
     const searchUserAdmin = await User.findOne({username:automaticUser.username});
     if(!searchUserAdmin)
     {
@@ -60,4 +63,13 @@ exports.initServer = ()=> app.listen(port, async ()=>
         await userAdmin.save();
         console.log('User SuperAdmin register Successfully.')
     }
+
+    //CREACION DE LA CARPETA POR ÚNICA VEZ//
+    fs.mkdir(path.join(__dirname, '../uploads/users'),
+        { recursive: true }, (err) => {
+            if (err) {
+                return console.error(err);
+            }
+            console.log('Directory created successfully!');
+    });
 });

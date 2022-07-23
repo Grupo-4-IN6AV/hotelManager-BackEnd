@@ -11,7 +11,8 @@ const userSchema = mongoose.Schema
         surname: String,
         email: String,
         phone: String,
-        role: String
+        role: String,
+        image: String,
     }
 );
 
