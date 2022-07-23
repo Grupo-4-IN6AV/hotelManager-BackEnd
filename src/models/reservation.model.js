@@ -2,17 +2,28 @@
 
 const mongoose = require('mongoose');
 
-const reservationSchema = mongoose.Schema
-(
+
+const reservationSchema = mongoose.Schema(
     {
         entryDate: Date,
         exitDate: Date,
-        price: Number,
-        services: [{serviceId: {type: mongoose.Schema.ObjectId, ref : 'Service'}}],
-        rooms: [{room:{type: mongoose.Schema.ObjectId, ref : 'Room'}}],
-        hotel: {type: mongoose.Schema.ObjectId, ref : 'Hotel'},
+        totalDays: Number,
+        totalNights: Number,
         user: {type: mongoose.Schema.ObjectId, ref : 'User'},
-    }
-);
+        NIT: String,
+        room: {
+                room:{type: mongoose.Schema.ObjectId, ref : 'Room'}, 
+                price: Number,
+            },
+        services: 
+        [{
+                service:{type: mongoose.Schema.ObjectId, ref : 'Service'}, 
+                price: Number,
+        }],
+        hotel: {type: mongoose.Schema.ObjectId, ref : 'Hotel'},
+        IVA: Number,
+        subTotal: Number,
+        total: Number,
+    });
 
 module.exports = mongoose.model('Reservation', reservationSchema);
