@@ -30,7 +30,7 @@ exports.saveEvent  = async (req, res)=>{
         const stringHour = data.date
         const actualDate = new Date();
         const paramDate = new Date(params.date)
-        if (actualDate > paramDate)
+        if (actualDate < paramDate)
             return res.status(400).send({message: 'This Date not Correct'})
 
         data.date = paramDate

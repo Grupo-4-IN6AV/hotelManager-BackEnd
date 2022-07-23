@@ -86,7 +86,7 @@ exports.getRooms = async (req, res)=>{
 exports.getRoom = async (req, res)=>{
     try{
         const roomId = req.params.id
-        const room = await Room.findOne({_id: roomId});
+        const room = await Room.findOne({_id: roomId}).populate('hotel typeRoom');
         if (!room) return res.send({message: 'Room not found'})
         return res.send({message: 'Room:', room})
     }catch(err){
@@ -100,9 +100,9 @@ exports.getRoom = async (req, res)=>{
 exports.getRoomName = async (req, res)=>{
     try{
         const params = req.body;
-        const room = await Room.find({name: {$regex: params.name, $options: 'i'}});
-        if (!room) return res.send({message: 'Room not found'})
-        return res.send({message: 'Room:', room})
+        const rooms = await Room.find({name: {$regex: params.name, $options: 'i'}});
+        if (!rooms) return res.send({message: 'Room not found'})
+        return res.send({message: 'Room:', rooms})
     }catch(err){
         console.log(err); 
         return err; 
