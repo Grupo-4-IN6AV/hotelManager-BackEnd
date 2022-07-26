@@ -8,6 +8,7 @@ const serviceSchema = mongoose.Schema
         description: String,
         price: Number,
         hotel: {type: mongoose.Schema.ObjectId, ref : 'Hotel'},
+        icon: String
     }
 );
 module.exports = mongoose.model('Service', serviceSchema);

@@ -5,8 +5,8 @@ const express = require('express');
 const api = express.Router();
 const mdAuth = require('../middlewares/authenticated');
 
-
 /*----------- R U T A S -----------*/
+
 
 //P Ú B L I C A S//
 api.get('/testRoom', roomController.testRoom);
@@ -21,8 +21,11 @@ api.post('/saveRoom', [mdAuth.ensureAuth, mdAuth.isAdmin],roomController.saveRoo
 api.put('/updateRoom/:id',[mdAuth.ensureAuth, mdAuth.isAdmin],roomController.updateRoom);
 api.delete('/deleteRoom/:id', [mdAuth.ensureAuth, mdAuth.isAdmin], roomController.deleteRoom);
 
-//Admin//
+//ADMIN HOTEL//
+api.post('/saveRoomHotel', [mdAuth.ensureAuth, mdAuth.isAdminHotel],roomController.saveRoom);
+api.get('/getRoomsHotelAdmin', [mdAuth.ensureAuth, mdAuth.isAdminHotel], roomController.getRoomHotelAdmin);
 api.get('/getRoomByHotel/:id',roomController.getRoomHotel);
-
+api.put('/updateRoomHotel/:id',[mdAuth.ensureAuth, mdAuth.isAdminHotel],roomController.updateRoom);
+api.delete('/deleteRoomHotel/:id', [mdAuth.ensureAuth, mdAuth.isAdminHotel], roomController.deleteRoom);
 
 module.exports = api;

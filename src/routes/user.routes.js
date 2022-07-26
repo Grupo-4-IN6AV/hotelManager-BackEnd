@@ -4,6 +4,10 @@ const express = require('express');
 const userController = require('../controllers/user.controller');
 const api = express.Router();
 const mdAuth = require('../middlewares/authenticated');
+//CARGAR IMAGENES/
+const connectMultiparty = require('connect-multiparty');
+const upload = connectMultiparty({uploadDir:'./uploads/users'});
+
 
 //FUNCIÓN PÚBLICA
 api.get('/userTest', userController.userTest);
@@ -12,7 +16,6 @@ api.get('/userTest', userController.userTest);
 //CLIENT//
 api.post('/register', userController.register);
 api.post('/login', userController.login);
-api.put('/update/:id', mdAuth.ensureAuth, userController.update);
 api.delete('/delete/:id', mdAuth.ensureAuth, userController.delete);
 
 //FUNCIONES PRIVADAS//
@@ -29,5 +32,13 @@ api.get('/getUsersSurnameByUp',  userController.getUsersSurnameByUp);
 api.get('/getUsersSurnameByDown',  userController.getUsersSurnameByDown);
 api.get('/getUsersClient', userController.getUsersClient);
 api.get('/getUsersAdminHotel', userController.getUsersAdminHotel);
+
+//Usuario - CLIENTE | ADMIN-HOTEL//
+api.put('/updateAccount/:id',  mdAuth.ensureAuth, userController.updateAccount);
+api.put('/changePassword/:id',  mdAuth.ensureAuth, userController.changePassword);
+
+//IMAGENES//
+api.post('/uploadImage/:id', [mdAuth.ensureAuth, upload], userController.addImageUser);
+api.get('/getImage/:fileName',  upload, userController.getImageUser);
 
 module.exports = api;

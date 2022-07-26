@@ -20,4 +20,13 @@ api.put('/updateService/:id', [mdAuth.ensureAuth, mdAuth.isAdmin], serviceContro
 api.delete('/deleteService/:id', [mdAuth.ensureAuth, mdAuth.isAdmin], serviceController.deleteService);
 api.post('/searchService', serviceController.searchService);
 
+
+//ADMIN HOTEL//
+api.get('/getServicesHotel', [mdAuth.ensureAuth, mdAuth.isAdminHotel], serviceController.getServicesHotel);
+api.delete('/deleteServiceHotel/:id', [mdAuth.ensureAuth, mdAuth.isAdminHotel], serviceController.deleteService);
+api.post('/saveServiceHotel', [mdAuth.ensureAuth, mdAuth.isAdminHotel], serviceController.saveService);
+api.put('/updateServiceHotel/:id', [mdAuth.ensureAuth, mdAuth.isAdminHotel], serviceController.updateService);
+api.put('/saveIconService/:id', [mdAuth.ensureAuth, mdAuth.isAdminHotel], serviceController.saveIconService);
+api.get('/getServiceHotel/:id', [mdAuth.ensureAuth, mdAuth.isAdminHotel], serviceController.getService);
+
 module.exports = api;

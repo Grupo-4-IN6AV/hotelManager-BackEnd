@@ -21,5 +21,12 @@ api.delete('/deleteTypeRoom/:id', [mdAuth.ensureAuth, mdAuth.isAdmin], typeRoomC
 api.get('/getTypesRooms', [mdAuth.ensureAuth, mdAuth.isAdmin], typeRoomController.getMasterTypesRooms);
 api.post('/searchTypeRooms', [mdAuth.ensureAuth, mdAuth.isAdmin], typeRoomController.searchTypesRooms);
 
+//ADMIN HOTEL//
+api.get('/getTypeRoomHotel', [mdAuth.ensureAuth, mdAuth.isAdminHotel], typeRoomController.getTypeRoomHotel);
+api.post('/saveTypeRoomHotel', [mdAuth.ensureAuth, mdAuth.isAdminHotel], typeRoomController.saveTypeRoom);
+api.get('/getTypeRoomHotel/:id', [mdAuth.ensureAuth, mdAuth.isAdminHotel], typeRoomController.getTypeRoom);
+api.put('/updateTypeRoomHotel/:id', [mdAuth.ensureAuth, mdAuth.isAdminHotel], typeRoomController.updateTypeRoom);
+api.delete('/deleteTypeRoomHotel/:id', [mdAuth.ensureAuth, mdAuth.isAdminHotel], typeRoomController.deleteTypeRoom);
+api.get('/getTypeRoomHotelAdd/:id', [mdAuth.ensureAuth, mdAuth.isAdminHotel], typeRoomController.getTypeRoomsHotels);
 
 module.exports = api;

@@ -2,6 +2,7 @@
 
 const bcrypt = require('bcrypt-nodejs');
 const User = require('../models/user.model');
+const fs = require('fs');
 
 exports.validateData = (data) =>
 {
@@ -105,18 +106,26 @@ exports.detailsShoppingCart = async(shoppingCartId)=>
     return searchShoppingCart;
 }
 
-exports.validExtension = async (ext, filePath)=>{
-    try{
-        if( ext == 'png' ||
+//Validaciones de Imagenes//
+exports.validExtension = async (ext, filePath) => 
+{
+    try {
+        if (ext == 'png' ||
             ext == 'jpg' ||
             ext == 'jpeg' ||
-            ext == 'gif'){
+            ext == 'gif') {
             return true;
-        }else{
+
+        } else {
+
             fs.unlinkSync(filePath);
+
             return false;
+
         }
-    }catch(err){
+    } 
+    catch (err) 
+    {
         console.log(err);
         return err;
     }

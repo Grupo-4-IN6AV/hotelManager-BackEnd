@@ -35,7 +35,10 @@ exports.saveHotel  = async (req, res)=>{
             
         const adminExist = await User.findOne({_id: data.admin});
         if(!adminExist) return res.send({message: 'Admin not found'});
-
+        const hotels = await Hotel.find({admin:adminExist._id});
+        if(hotels.length!==0)
+            return res.status(400).send({message:'This ADMIN-HOTEL already manage a Hotel'})
+       
         const existHotel = await Hotel.findOne({$and:[{name: data.name},{admin: data.admin}]});
         if(!existHotel){
             const hotel= new Hotel(data);
@@ -179,8 +182,9 @@ exports.updateHotel= async (req, res)=>{
 
 
 //Eliminar un Hotel //
-exports.deleteHotel= async (req, res)=>{
-    try{
+exports.deleteHotel = async (req, res)=>{
+    try
+    {
         const hotelId = req.params.id;
         const hotelExist = await Hotel.findOne({_id: hotelId});
         if(!hotelExist) return res.status(400).send({message: 'Hotel not found or already deleted.'});     
@@ -218,9 +222,26 @@ exports.deleteHotel= async (req, res)=>{
         const hotelDeleted = await Hotel.findOneAndDelete({_id: hotelId});
         return res.send({message: 'Hotel deleted Successfully', hotelDeleted });
           
-    }catch(err){
+    }
+    catch(err)
+    {
         console.log(err);
         return res.status(500).send({err, message: 'Error deleting Hotel'});
-        
+    }
+}
+
+
+exports.getHotelManager = async (req, res)=>
+{
+    try
+    {
+        const manager = req.user.sub
+        const hotel = await Hotel.findOne({admin:manager}).populate('admin');
+        return res.send({message: 'Hotels:', hotel})
+    }
+    catch(err)
+    {
+        console.log(err); 
+        return err; 
     }
 }

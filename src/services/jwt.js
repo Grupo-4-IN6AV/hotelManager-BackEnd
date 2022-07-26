@@ -11,7 +11,7 @@ exports.createToken = async (user)=>{
             name: user.name,
             surname: user.surname,
             username: user.username,
-            email: user.emai,
+            email: user.email,
             role: user.role,
             iat: moment().unix(),
             exp: moment().add(10, 'hour').unix()
