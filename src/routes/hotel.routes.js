@@ -22,5 +22,7 @@ api.get('/getHotelsNameDown',  hotelController.getHotelsNameDown);
 api.put('/updateHotel/:id', [mdAuth.ensureAuth, mdAuth.isAdmin], hotelController.updateHotel);
 api.delete('/deleteHotel/:id', [mdAuth.ensureAuth, mdAuth.isAdmin], hotelController.deleteHotel);
 
+//Admin Hotel//
+api.get('/getHotelManager', [mdAuth.ensureAuth, mdAuth.isAdminHotel],  hotelController.getHotelManager);
 
 module.exports = api;

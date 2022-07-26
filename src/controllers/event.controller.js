@@ -2,7 +2,6 @@
 
 const Event = require('../models/event.model');
 const Hotel = require('../models/hotel.model');
-const TypeEvent = require('../models/typeEvent.model')
 const { validateData, checkUpdated} = require('../utils/validate');
 
 
@@ -56,8 +55,6 @@ exports.saveEvent  = async (req, res)=>{
 
 }
 
-
-
 //Mostrar todos los Eventos//
 exports.getEvents = async (req, res)=>{
     try{
@@ -85,23 +82,6 @@ exports.getEvent = async (req, res)=>{
         return err; 
     }
 }
-
-
-
-//Mostrar un  Evento por Hotel //
-exports.getEventHotel = async (req, res)=>{
-    try
-    {
-        const hotelId = req.params.id
-        const event = await Event.find({hotel: hotelId});
-        if (!event) return res.send({message: 'Events not found'})
-        return res.send({message: 'Event:', event})
-    }catch(err){
-        console.log(err); 
-        return err; 
-    }
-}
-
 
 
 //Actualizar un Evento //
@@ -171,6 +151,30 @@ exports.deleteEvent= async (req, res)=>{
         return res.send({message: 'Delete Event.', eventDeleted });
           
     }catch(err){
+        console.log(err); 
+        return err; 
+    }
+}
+
+
+//FUNCIONES DEL ADMINISTRADOR DEL HOTEL//
+exports.getEventsHotel = async(req, res)=>
+{
+    try
+    {
+        const administrator = req.user.sub;
+        //BUSCAR HOTEL//
+        const hotel = await Hotel.findOne({admin:administrator})
+        if(!hotel)
+            return res.status(400).send({message:'Not Found Hotel.'})
+        
+        const events = await Event.find({hotel: hotel._id}).populate('hotel');
+
+        return res.send({message: 'Events Found', events });
+          
+    }
+    catch(err)
+    {
         console.log(err); 
         return err; 
     }

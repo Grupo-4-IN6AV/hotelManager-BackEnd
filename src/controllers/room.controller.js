@@ -40,7 +40,6 @@ exports.saveRoom  = async (req, res)=>{
             description: params.description,
             price: params.price,
             dateAvailable: setDateRoom,
-            state: 'false',
             typeRoom: params.typeRoom,
             hotel: params.hotel,
         };
@@ -53,6 +52,9 @@ exports.saveRoom  = async (req, res)=>{
 
         const hotelExist = await Hotel.findOne({_id: data.hotel});
         if(!hotelExist) return res.send({message: 'Hotel not found'});
+
+        if(data.price<0)
+            return res.status(400).send({message:'The price cannot be less than 0.'})
 
         const roomExist = await Room.findOne({ $and: [{name: data.name}, {hotel: data.hotel}]});
         if(!roomExist){
@@ -163,19 +165,19 @@ exports.updateRoom= async (req, res)=>{
             name: params.name,
             description: params.name,
             price: params.price,
-            dateAvailable: params.dateAvailable,
-            state: params.state,
             typeRoom: params.typeRoom,
             hotel: params.hotel,
         };
 
         const check = await checkUpdated(data);
         if(check === false) return res.status(400).send({message: 'Data not recived'});
-
         const msg = validateData(data);
         if(!msg)
         {
 
+            if(data.price<0)
+            return res.status(400).send({message:'The price cannot be less than 0.'})
+            
             const roomExist = await Room.findOne({_id: roomId});
             if(!roomExist) return res.status.send({message: 'Room not found'});
 
@@ -209,7 +211,7 @@ exports.deleteRoom= async (req, res)=>{
         
         const reservationExist = await Reservation.find({room: roomId});
         for(let reservationDeleted of reservationExist){
-            const reservationDeleted = await Reservation.findOneAndDelete({ hotel: hotelId});
+            const reservationDeleted = await Reservation.findOneAndDelete({ hotel: roomExist.hotelId});
            
         }
 
@@ -220,5 +222,27 @@ exports.deleteRoom= async (req, res)=>{
         console.log(err);
         return res.status(500).send({err, message: 'Error deleting Room'});
         
+    }
+}
+
+
+
+//FUNCIONES DEL ADMINISTRADOR DEL HOTEL//
+exports.getRoomHotelAdmin = async(req, res)=>
+{
+    try{
+        const administrator = req.user.sub;
+        //BUSCAR HOTEL//
+        const hotel = await Hotel.findOne({admin:administrator})
+        if(!hotel)
+            return res.status(400).send({message:'Not Found Hotel.'})
+        
+        const rooms = await Room.find({hotel: hotel._id}).populate('hotel typeRoom');
+
+        return res.send({message: 'Rooms Found', rooms });
+          
+    }catch(err){
+        console.log(err); 
+        return err; 
     }
 }

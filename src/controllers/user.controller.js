@@ -1,6 +1,7 @@
 'use strict'
 
 const User = require('../models/user.model');
+
 const {validateData, encrypt, alreadyUser, checkPassword, 
     checkUpdate, checkPermission, checkUpdateAdmin, validExtension} = require('../utils/validate');
 const jwt = require('../services/jwt');
@@ -70,11 +71,10 @@ exports.login = async(req, res)=>{
 
 //FUNCIONES PRIVADAS
 //CLIENT
-exports.update = async(req, res)=>{
+exports.updateAccount = async(req, res)=>{
     try{
         const userId = req.params.id;
         const params = req.body;
-
         const permission = await checkPermission(userId, req.user.sub);
         if(permission === false) return res.status(401).send({message: 'You dont have permission to update this user'});
         const userExist = await User.findOne({_id: userId});
@@ -82,7 +82,7 @@ exports.update = async(req, res)=>{
         const validateUpdate = await checkUpdate(params);
         if(validateUpdate === false) return res.status(400).send({message: 'Cannot update this information or invalid params'});
         let alreadyname = await alreadyUser(params.username);
-        if(alreadyname && userExist.username != params.username) return res.send({message: 'Username already in use'});
+        if(alreadyname && userExist.username != params.username) return res.status(400).send({message: 'Username already in use'});
         const userUpdate = await User.findOneAndUpdate({_id: userId}, params, {new: true}).lean();
         if(userUpdate) return res.send({message: 'User updated', userUpdate});
         return res.send({message: 'User not updated'});
@@ -107,6 +107,44 @@ exports.delete = async(req, res)=>{
     }
 }
 
+
+exports.changePassword = async(req,res)=>
+{
+    //Eliminar solo por token o se puede ingresar id de la empresa?//
+    const userID = req.params.id;
+
+    //INGRESAR CONTRASEÑA PARA ELIMINAR//
+    const params = req.body;
+
+    const password = params.password;
+    const newPassword = params.newPassword;
+
+    const data =
+    {
+        password: password,
+        newPassword: newPassword
+    }
+
+    let msg = validateData(data);
+    if(msg) return res.status(400).send(msg);
+
+    const persmission = await checkPermission(userID, req.user.sub);
+    if(persmission === false) return res.status(403).send({message: 'You dont have permission to Change Password.'});
+
+    const userExist = await User.findOne({_id:userID});
+
+    if(userExist && await checkPassword(password, userExist.password))
+    {
+        data.newPassword = await encrypt(params.newPassword);
+        const changePassword = await User.findOneAndUpdate(
+            {_id:userID},{password:data.newPassword},{new:true})
+        return res.send({message:'Password Updated Successfully'})
+    }
+    else
+    {
+        return res.status(400).send({message:'The password is not correct'})
+    }
+}
 
 
 //FUNCIONES PRIVADAS
@@ -323,6 +361,9 @@ exports.addImageUser=async(req,res)=>
 
         const permission = await checkPermission(userID, req.user.sub);
         if(permission === false) return res.status(401).send({message: 'You dont have permission to update this User.'});
+        const alreadyImage = await User.findOne({_id: req.user.sub});
+        let pathFile = './uploads/users/';
+        if(alreadyImage.image) fs.unlinkSync(pathFile+alreadyImage.image);
         if(!req.files.image || !req.files.image.type) return res.status(400).send({message: 'Havent sent image'});
         
         const filePath = req.files.image.path; 
@@ -335,8 +376,9 @@ exports.addImageUser=async(req,res)=>
 
         const validExt = await validExtension(fileExt, filePath);
         if(validExt === false) return res.status(400).send('Invalid extension');
-        const updateUser = await User.findOneAndUpdate({_id: userID}, {image: fileName});
+        const updateUser = await User.findOneAndUpdate({_id: req.user.sub}, {image: fileName}, {new: true}).lean();        if(!updateUser) return res.status(404).send({message: 'User not found'});
         if(!updateUser) return res.status(404).send({message: 'User not found'});
+        delete updateUser.password;
         return res.send(updateUser);
     }
     catch(err)

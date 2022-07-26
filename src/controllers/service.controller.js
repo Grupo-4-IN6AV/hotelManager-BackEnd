@@ -42,7 +42,6 @@ exports.saveService  = async (req, res)=>{
         console.log(err); 
         return err; 
     }
-
 }
 
 
@@ -110,6 +109,9 @@ exports.updateService= async (req, res)=>{
             const serviceExist = await Service.findOne({_id: serviceId});
             if(!serviceExist) return res.status.send({message: 'Service  not found'});
 
+            if(data.price<0)
+            return res.status(400).send({message:'The price cannot be less than 0.'})
+
             let alreadyName = await Service.findOne({$and:[{name: data.name},{hotel: serviceExist.hotel}]});
                 if(alreadyName && serviceExist.name != data.name) return res.status(400).send({message: 'Service Already Exist'});
     
@@ -137,6 +139,69 @@ exports.deleteService= async (req, res)=>{
         const serviceDeletd = await Service.findOneAndDelete({_id: serviceId});
         return res.send({message: 'Service deleted Successfully', serviceDeletd });
           
+    }catch(err){
+        console.log(err); 
+        return err; 
+    }
+}
+
+
+//FUNCIONES DEL ADMINISTRADOR DEL HOTEL//
+exports.getServicesHotel = async(req, res)=>
+{
+    try{
+        const administrator = req.user.sub;
+        //BUSCAR HOTEL//
+        const hotel = await Hotel.findOne({admin:administrator})
+        if(!hotel)
+            return res.status(400).send({message:'Not Found Hotel.'})
+        
+        const services = await Service.find({hotel: hotel._id}).populate('hotel');
+
+        return res.send({message: 'Services Found', services });
+          
+    }catch(err){
+        console.log(err); 
+        return err; 
+    }
+}
+
+
+exports.getServiceHotel = async (req, res)=>
+{
+    try
+    {
+        const serviceID = req.params.id
+        const service = await Service.findOne({_id: serviceID}).populate('hotel');
+        if (!service) return res.send({message: 'Service not found'})
+        return res.send({message: 'Service:', service})
+    }
+    catch(err)
+    {
+        console.log(err); 
+        return err; 
+    }
+}
+
+
+//Agregar Tipo de Servicio//
+exports.saveIconService  = async (req, res)=>{
+    try{
+        const serviceID = req.params.id
+        const params = req.body; 
+        const data = {
+            icon: params.icon,
+        };
+        const msg = validateData(data);
+
+        if(msg) return res.status(400).send(msg);
+            
+        const serviceExist = await Service.findOne({_id:serviceID});
+        if(!serviceExist) return res.send({message: 'Service not found'});
+        
+        const updatedService = await Service.findOneAndUpdate({_id: serviceID}, {icon:params.icon}, {new: true});
+        return res.send({message: 'Icon Added Successfully', updatedService});
+    
     }catch(err){
         console.log(err); 
         return err; 

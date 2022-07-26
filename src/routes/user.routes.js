@@ -16,7 +16,6 @@ api.get('/userTest', userController.userTest);
 //CLIENT//
 api.post('/register', userController.register);
 api.post('/login', userController.login);
-api.put('/update/:id', mdAuth.ensureAuth, userController.update);
 api.delete('/delete/:id', mdAuth.ensureAuth, userController.delete);
 
 //FUNCIONES PRIVADAS//
@@ -34,6 +33,9 @@ api.get('/getUsersSurnameByDown',  userController.getUsersSurnameByDown);
 api.get('/getUsersClient', userController.getUsersClient);
 api.get('/getUsersAdminHotel', userController.getUsersAdminHotel);
 
+//Usuario - CLIENTE | ADMIN-HOTEL//
+api.put('/updateAccount/:id',  mdAuth.ensureAuth, userController.updateAccount);
+api.put('/changePassword/:id',  mdAuth.ensureAuth, userController.changePassword);
 
 //IMAGENES//
 api.post('/uploadImage/:id', [mdAuth.ensureAuth, upload], userController.addImageUser);
