@@ -2,8 +2,11 @@
 
 const Event = require('../models/event.model');
 const Hotel = require('../models/hotel.model');
-const { validateData, checkUpdated} = require('../utils/validate');
+const { validateData, checkUpdated, validExtension} = require('../utils/validate');
 
+//Connect Multiparty Upload Image//
+const fs = require('fs');
+const path = require('path');
 
 //Función de Testeo//
 exports.testEvent = (req, res)=>{
@@ -177,5 +180,55 @@ exports.getEventsHotel = async(req, res)=>
     {
         console.log(err); 
         return err; 
+    }
+}
+
+//Función para agregar una IMG a una COMPANY
+exports.addImageEvent = async(req,res)=>
+{
+    try
+    {
+        const eventID = req.params.id;
+        const alreadyImage = await Event.findOne({_id: eventID});
+        let pathFile = './uploads/events/';
+        if(alreadyImage.image) fs.unlinkSync(pathFile+alreadyImage.image);
+        if(!req.files.image || !req.files.image.type) return res.status(400).send({message: 'Havent sent image'});
+        
+        const filePath = req.files.image.path; 
+       
+        const fileSplit = filePath.split('\\'); 
+        const fileName = fileSplit[2]; 
+
+        const extension = fileName.split('\.'); 
+        const fileExt = extension[1]; 
+
+        const validExt = await validExtension(fileExt, filePath);
+        if(validExt === false) return res.status(400).send('Invalid extension');
+        const updateEvent = await Event.findOneAndUpdate({_id: eventID}, {image: fileName}, {new: true}).lean();        
+        if(!updateEvent) return res.status(404).send({message: 'Event not found'});
+        return res.send(updateEvent);
+    }
+    catch(err)
+    {
+        console.log(err);
+        return res.status(500).send({err, message: 'Error Add Image Event'});
+    }
+}
+
+exports.getImageEvent = async(req, res)=>
+{
+    try
+    {
+        const fileName = req.params.fileName;
+        const pathFile = './uploads/events/' + fileName;
+
+        const image = fs.existsSync(pathFile);
+        if(!image) return res.status(404).send({message: 'Image not found'});
+        return res.sendFile(path.resolve(pathFile));
+    }
+    catch(err)
+    {
+        console.log(err);
+        return res.status(500).send({err, message: 'Error getting image'});
     }
 }

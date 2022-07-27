@@ -19,7 +19,7 @@ api.get('/getTypesRoomsHotel/:id', [mdAuth.ensureAuth, mdAuth.isAdmin], typeRoom
 api.put('/updateTypeRoom/:id', [mdAuth.ensureAuth, mdAuth.isAdmin], typeRoomController.updateTypeRoom);
 api.delete('/deleteTypeRoom/:id', [mdAuth.ensureAuth, mdAuth.isAdmin], typeRoomController.deleteTypeRoom);
 api.get('/getTypesRooms', [mdAuth.ensureAuth, mdAuth.isAdmin], typeRoomController.getMasterTypesRooms);
-api.post('/searchTypeRooms', [mdAuth.ensureAuth, mdAuth.isAdmin], typeRoomController.searchTypesRooms);
+api.post('/searchTypeRooms', typeRoomController.searchTypesRooms);
 
 //ADMIN HOTEL//
 api.get('/getTypeRoomHotel', [mdAuth.ensureAuth, mdAuth.isAdminHotel], typeRoomController.getTypeRoomHotel);

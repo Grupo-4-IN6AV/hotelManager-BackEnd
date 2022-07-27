@@ -10,6 +10,7 @@ const eventSchema = mongoose.Schema
         startHour: String,
         endHour: String,
         hotel: {type: mongoose.Schema.ObjectId, ref : 'Hotel'},
+        image: String
     }
 );
 module.exports = mongoose.model('Event', eventSchema);

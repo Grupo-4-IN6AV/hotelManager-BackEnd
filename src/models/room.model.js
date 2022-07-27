@@ -11,7 +11,8 @@ const roomSchema = mongoose.Schema
         dateAvailable: Date,
         state: Boolean,      
         typeRoom: {type: mongoose.Schema.ObjectId, ref : 'TypeRoom'},
-        hotel: {type: mongoose.Schema.ObjectId, ref : 'Hotel'}
+        hotel: {type: mongoose.Schema.ObjectId, ref : 'Hotel'},
+        image: String
     }
 );
 

@@ -5,8 +5,12 @@ const Hotel = require('../models/hotel.model');
 const Room = require('../models/room.model');
 const Reservation = require('../models/reservation.model');
 
-const { validateData, checkUpdated} = require('../utils/validate');
+const { validateData, checkUpdated, validExtension} = require('../utils/validate');
 
+
+//Connect Multiparty Upload Image//
+const fs = require('fs');
+const path = require('path');
 
 //Función de Testeo//
 exports.testRoom = (req, res)=>{
@@ -244,5 +248,55 @@ exports.getRoomHotelAdmin = async(req, res)=>
     }catch(err){
         console.log(err); 
         return err; 
+    }
+}
+
+//Función para agregar una IMG//
+exports.addImageRoom = async(req,res)=>
+{
+    try
+    {
+        const roomID = req.params.id;
+        const alreadyImage = await Room.findOne({_id: roomID});
+        let pathFile = './uploads/rooms/';
+        if(alreadyImage.image) fs.unlinkSync(pathFile+alreadyImage.image);
+        if(!req.files.image || !req.files.image.type) return res.status(400).send({message: 'Havent sent image'});
+        
+        const filePath = req.files.image.path; 
+       
+        const fileSplit = filePath.split('\\'); 
+        const fileName = fileSplit[2]; 
+
+        const extension = fileName.split('\.'); 
+        const fileExt = extension[1]; 
+
+        const validExt = await validExtension(fileExt, filePath);
+        if(validExt === false) return res.status(400).send('Invalid extension');
+        const updateRoom = await Room.findOneAndUpdate({_id: roomID}, {image: fileName}, {new: true}).lean();        
+        if(!updateRoom) return res.status(404).send({message: 'Event not found'});
+        return res.send(updateRoom);
+    }
+    catch(err)
+    {
+        console.log(err);
+        return res.status(500).send({err, message: 'Error Add Image Event'});
+    }
+}
+
+exports.getImageRoom = async(req, res)=>
+{
+    try
+    {
+        const fileName = req.params.fileName;
+        const pathFile = './uploads/rooms/' + fileName;
+
+        const image = fs.existsSync(pathFile);
+        if(!image) return res.status(404).send({message: 'Image not found'});
+        return res.sendFile(path.resolve(pathFile));
+    }
+    catch(err)
+    {
+        console.log(err);
+        return res.status(500).send({err, message: 'Error getting image'});
     }
 }

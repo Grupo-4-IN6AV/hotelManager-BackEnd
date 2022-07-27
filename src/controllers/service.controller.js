@@ -184,6 +184,23 @@ exports.getServiceHotel = async (req, res)=>
 }
 
 
+exports.getServiceHotelID = async (req, res)=>
+{
+    try
+    {
+        const hotel = req.params.id
+        const services = await Service.find({hotel: hotel}).populate('hotel');
+        if (!services) return res.send({message: 'Service not found'})
+        return res.send({message: 'Service:', services})
+    }
+    catch(err)
+    {
+        console.log(err); 
+        return err; 
+    }
+}
+
+
 //Agregar Tipo de Servicio//
 exports.saveIconService  = async (req, res)=>{
     try{

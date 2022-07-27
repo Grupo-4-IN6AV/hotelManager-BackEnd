@@ -19,6 +19,7 @@ api.get('/getServices', [mdAuth.ensureAuth, mdAuth.isAdmin], serviceController.g
 api.put('/updateService/:id', [mdAuth.ensureAuth, mdAuth.isAdmin], serviceController.updateService);
 api.delete('/deleteService/:id', [mdAuth.ensureAuth, mdAuth.isAdmin], serviceController.deleteService);
 api.post('/searchService', serviceController.searchService);
+api.get('/getServiceHotelID/:id', serviceController.getServiceHotelID);
 
 
 //ADMIN HOTEL//
