@@ -30,6 +30,7 @@ api.delete('/deleteRoom/:id', [mdAuth.ensureAuth, mdAuth.isAdmin], roomControlle
 api.post('/saveRoomHotel', [mdAuth.ensureAuth, mdAuth.isAdminHotel],roomController.saveRoom);
 api.get('/getRoomsHotelAdmin', [mdAuth.ensureAuth, mdAuth.isAdminHotel], roomController.getRoomHotelAdmin);
 api.get('/getRoomByHotel/:id',roomController.getRoomHotel);
+api.get('/getRoomsPrice', roomController.getRoomsPriceHotel);
 api.put('/updateRoomHotel/:id',[mdAuth.ensureAuth, mdAuth.isAdminHotel],roomController.updateRoom);
 api.delete('/deleteRoomHotel/:id', [mdAuth.ensureAuth, mdAuth.isAdminHotel], roomController.deleteRoom);
 

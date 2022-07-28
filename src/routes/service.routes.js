@@ -30,4 +30,6 @@ api.put('/updateServiceHotel/:id', [mdAuth.ensureAuth, mdAuth.isAdminHotel], ser
 api.put('/saveIconService/:id', [mdAuth.ensureAuth, mdAuth.isAdminHotel], serviceController.saveIconService);
 api.get('/getServiceHotel/:id', [mdAuth.ensureAuth, mdAuth.isAdminHotel], serviceController.getService);
 
+api.get('/getArrayServices', serviceController.getHotelsServices);
+
 module.exports = api;

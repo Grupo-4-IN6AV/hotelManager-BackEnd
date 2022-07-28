@@ -224,3 +224,25 @@ exports.saveIconService  = async (req, res)=>{
         return err; 
     }
 }
+
+
+//Mostrar todos los Hoteles//
+exports.getHotelsServices = async (req, res)=>{
+    try
+    {
+        var arrayServices = []
+        const hotels = await Hotel.find().populate('admin');
+        for (let hotel of hotels)
+        {
+            let servicesHotel = await Service.find({hotel:hotel._id})
+            arrayServices.push(servicesHotel)
+        }
+        return res.send({arrayServices})
+
+    }
+    catch(err)
+    {
+        console.log(err); 
+        return err; 
+    }
+}
