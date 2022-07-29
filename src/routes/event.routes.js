@@ -26,6 +26,7 @@ api.delete('/deleteEvent/:id', [mdAuth.ensureAuth, mdAuth.isAdmin], eventControl
 api.post('/saveEventHotel', [mdAuth.ensureAuth, mdAuth.isAdminHotel], eventController.saveEvent);
 api.get('/getEventsHotel', [mdAuth.ensureAuth, mdAuth.isAdminHotel], eventController.getEventsHotel);
 api.delete('/deleteEventHotel/:id', [mdAuth.ensureAuth, mdAuth.isAdminHotel], eventController.deleteEvent);
+api.get('/getEventsHotelID/:id', eventController.getEventsHotelID);
 
 
 //IMAGENES//

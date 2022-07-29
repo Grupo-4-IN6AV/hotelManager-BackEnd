@@ -160,6 +160,31 @@ exports.deleteEvent= async (req, res)=>{
 }
 
 
+exports.getEventsHotelID = async(req, res)=>
+{
+    try
+    {
+        const hotel = req.params.id;
+        //BUSCAR HOTEL//
+        const hotelSearch = await Hotel.findOne({_id:hotel})
+        if(!hotelSearch)
+            return res.status(400).send({message:'Not Found Hotel.'})
+        
+        const events = await Event.find({hotel: hotelSearch._id}).populate('hotel');
+
+        return res.send({message: 'Events Found', events });
+          
+    }
+    catch(err)
+    {
+        console.log(err); 
+        return err; 
+    }
+}
+
+
+
+
 //FUNCIONES DEL ADMINISTRADOR DEL HOTEL//
 exports.getEventsHotel = async(req, res)=>
 {
