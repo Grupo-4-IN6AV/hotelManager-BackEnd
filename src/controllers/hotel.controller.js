@@ -150,7 +150,6 @@ exports.updateHotel = async (req, res) => {
             address: params.address,
             email: params.email,
             phone: params.phone,
-            admin: params.admin,
         };
 
         const check = await checkUpdated(data);
@@ -160,13 +159,6 @@ exports.updateHotel = async (req, res) => {
         if (!msg) {
             const hotelExist = await Hotel.findOne({ _id: hotelId });
             if (!hotelExist) return res.status.send({ message: 'Hotel not found' });
-
-            const adminExist = await User.findOne({ _id: data.admin });
-            if (!adminExist) return res.status.send({ message: 'Admin not found' });
-
-            const hotels = await Hotel.find({ admin: adminExist._id });
-            if (hotels.length !== 0)
-                return res.status(400).send({ message: 'This ADMIN-HOTEL already manage a Hotel' })
 
             let alreadyName = await Hotel.findOne({ $and: [{ name: data.name }, { admin: data.admin }] });
             if (alreadyName && hotelExist.name != data.name) return res.status(400).send({ message: 'Hotel Already Exist' });
@@ -284,5 +276,50 @@ exports.getImageHotel = async (req, res) => {
     catch (err) {
         console.log(err);
         return res.status(500).send({ err, message: 'Error getting image' });
+    }
+}
+
+exports.getClientsHotel = async (req, res) => {
+    try {
+        const manager = req.user.sub;
+        const hotel = await Hotel.findOne({ admin: manager });
+        const totalReservations = await Reservation.find({ hotel: hotel._id });
+        var arrayPeople = []
+        for (let reservation of totalReservations) 
+        {
+            if (arrayPeople.length === 0) 
+            {
+                arrayPeople.push(reservation.user.valueOf())
+            }
+            for (let people of arrayPeople) 
+            {
+                if (people === reservation.user.valueOf()) continue
+                arrayPeople.push(reservation.user.valueOf())
+            }
+        }
+        const count = arrayPeople.length;
+        return res.send({ count })
+    }
+    catch (err) {
+        console.log(err);
+        return res.status(500).send({ err, message: 'Error count clients' });
+    }
+}
+
+
+exports.getMoneyHotel = async (req, res) => {
+    try {
+        const manager = req.user.sub;
+        const hotel = await Hotel.findOne({ admin: manager });
+        const totalReservations = await Reservation.find({ hotel: hotel._id });
+        var totalMoney = 0;
+        for (let money of totalReservations) {
+            totalMoney += money.subTotal
+        }
+        return res.send({ totalMoney })
+    }
+    catch (err) {
+        console.log(err);
+        return res.status(500).send({ err, message: 'Error count clients' });
     }
 }

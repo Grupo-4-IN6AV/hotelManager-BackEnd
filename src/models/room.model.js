@@ -12,7 +12,8 @@ const roomSchema = mongoose.Schema
         state: Boolean,      
         typeRoom: {type: mongoose.Schema.ObjectId, ref : 'TypeRoom'},
         hotel: {type: mongoose.Schema.ObjectId, ref : 'Hotel'},
-        image: String
+        image: String,
+        sales:Number,
     }
 );
 
