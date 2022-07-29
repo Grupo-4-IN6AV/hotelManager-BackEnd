@@ -7,6 +7,7 @@ const Service = require('../models/service.model');
 
 const { validateData, detailsShoppingCart } = require('../utils/validate');
 const typeRoomModel = require('../models/typeRoom.model');
+const { findOne } = require('../models/hotel.model');
 
 
 
@@ -120,7 +121,9 @@ exports.saveR = async (req, res) => {
         const addReservation = new Reservation(checkdata);
         await addReservation.save();
         //Actualizar la fecha disponible//
-        const updateDateAvailable = await Room.findOneAndUpdate({ _id: params.room }, { dateAvailable: finishDateExit }, { new: true });
+        const updateDateAvailable = await Room.findOneAndUpdate({ _id: params.room }, { dateAvailable: finishDateExit}, { new: true });
+        const updateSaleRoom = await Room.findOneAndUpdate({ _id: params.room }, {$inc:{sales:1}}, { new: true });
+
 
         //Actualizar Estado de las Habitaciones//
         const updateStateRoom = await Room.findOneAndUpdate({ _id: params.room }, { state: true }, { new: true });
@@ -245,7 +248,23 @@ exports.getReservationsUser = async (req, res) => {
     try 
     {
         const userID = req.user.sub
-        const reservations = await Reservation.find({user: userID }).populate('hotel user room');
+        const reservations = await Reservation.find({user: userID }).populate('hotel room.room')
+        return res.send({ reservations })
+    } 
+    catch (err) 
+    {
+        console.log(err);
+    }
+}
+
+
+//Ordenar las habitaciones por Hotel//
+exports.getReservationsManager = async (req, res) => {
+    try 
+    {
+        const manager = req.user.sub
+        const hotel = await Hotel.findOne({admin:manager})
+        const reservations = await Reservation.find({hotel: hotel }).populate('hotel room.room')
         return res.send({ reservations })
     } 
     catch (err) 

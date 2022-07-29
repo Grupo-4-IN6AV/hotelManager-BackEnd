@@ -19,5 +19,6 @@ api.delete('/deleteReservation/:id', mdAuth.ensureAuth, reservationController.de
 api.delete('/deleteServiceReservation/:id', mdAuth.ensureAuth, reservationController.deleteService);
 
 api.get('/getReservationsUser', mdAuth.ensureAuth, reservationController.getReservationsUser);
+api.get('/getReservationsManager', mdAuth.ensureAuth, reservationController.getReservationsManager);
 
 module.exports = api;

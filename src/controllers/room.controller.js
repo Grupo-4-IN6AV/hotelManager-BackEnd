@@ -43,6 +43,7 @@ exports.saveRoom = async (req, res) => {
             dateAvailable: setDateRoom,
             typeRoom: params.typeRoom,
             hotel: params.hotel,
+            sale:0,
         };
         const msg = validateData(data);
 

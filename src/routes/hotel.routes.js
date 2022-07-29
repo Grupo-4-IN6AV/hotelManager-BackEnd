@@ -28,8 +28,11 @@ api.delete('/deleteHotel/:id', [mdAuth.ensureAuth, mdAuth.isAdmin], hotelControl
 //Admin Hotel//
 api.get('/getHotelManager', [mdAuth.ensureAuth, mdAuth.isAdminHotel],  hotelController.getHotelManager);
 api.put('/updateHotelManager/:id', [mdAuth.ensureAuth, mdAuth.isAdminHotel], hotelController.updateHotel);
+api.get('/getTotalClients', [mdAuth.ensureAuth, mdAuth.isAdminHotel], hotelController.getClientsHotel);
+api.get('/getTotalMoney', [mdAuth.ensureAuth, mdAuth.isAdminHotel], hotelController.getMoneyHotel);
 
 api.post('/uploadImageHotel/:id', [mdAuth.ensureAuth, upload], hotelController.addImageHotel);
 api.get('/getImageHotel/:fileName',  upload, hotelController.getImageHotel);
+
 
 module.exports = api;
