@@ -6,6 +6,7 @@ const Hotel = require('../models/hotel.model');
 const Service = require('../models/service.model');
 
 const { validateData, detailsShoppingCart } = require('../utils/validate');
+const typeRoomModel = require('../models/typeRoom.model');
 
 
 
@@ -14,18 +15,16 @@ exports.testReservation = (req, res) => {
     return res.send({ message: 'Function test Reservation is running' });
 }
 
-
-
-
-
 //Función para enviar una reservación
 exports.saveR = async (req, res) => {
     try {
         const user = req.user.sub;
         const params = req.body;
         const data = {
+            state: 'On Going',
             entryDate: params.entryDate,
             exitDate: params.exitDate,
+            totalPersons: params.totalPersons,
             room: params.room,
             hotel: params.hotel,
             user: user
@@ -83,12 +82,18 @@ exports.saveR = async (req, res) => {
         const reservations = await Reservation.find({ "room.room": data.room })
         for (let reservation of reservations) {
             if (finishDateEntry >= reservation.entryDate && finishDateEntry < reservation.exitDate)
-                return res.status(400).send({ message: 'This Room Not Available in this Dates 1.' })
+                return res.status(400).send({ message: 'This Room Not Available in this Dates' })
             if (finishDateExit >= reservation.entryDate && finishDateExit <= reservation.exitDate)
-                return res.status(400).send({ message: 'This Room Not Available in this Dates 2.' })
+                return res.status(400).send({ message: 'This Room Not Available in this Dates' })
         }
 
+        const searchTypeRoom = await typeRoomModel.findOne({_id:verificRoom.typeRoom})
+            if (!searchTypeRoom) return res.status(400).send({ message: 'Room not found.' });
 
+            if(params.totalPersons > searchTypeRoom.numberPersons)
+            {
+                return res.status(400).send({message:'The room does not have capacity for so many people'});
+            }
 
         const setRoom = {
             room: params.room,
@@ -98,8 +103,10 @@ exports.saveR = async (req, res) => {
         const checkdata = {
             user: req.user.sub,
             room: setRoom,
+            hotel: params.hotel,
             entryDate: finishDateEntry,
             exitDate: finishDateExit,
+            totalPersons: params.totalPersons,
             totalDays: finishTotalDays,
             totalNights: finishTotalNights,
         }
@@ -112,13 +119,12 @@ exports.saveR = async (req, res) => {
 
         const addReservation = new Reservation(checkdata);
         await addReservation.save();
-        const reservation = await detailsShoppingCart(addReservation._id);
         //Actualizar la fecha disponible//
         const updateDateAvailable = await Room.findOneAndUpdate({ _id: params.room }, { dateAvailable: finishDateExit }, { new: true });
 
         //Actualizar Estado de las Habitaciones//
         const updateStateRoom = await Room.findOneAndUpdate({ _id: params.room }, { state: true }, { new: true });
-        return res.send({ message: 'Added New Reservation.', reservation });
+        return res.send({ message: 'Reservation Created Successfully', addReservation });
 
     }
     catch (err) {
@@ -184,8 +190,6 @@ exports.addService = async (req, res) => {
 }
 
 
-
-
 exports.deleteService = async (req, res) => {
     try {
         const reservationID = req.params.id;
@@ -236,37 +240,19 @@ exports.deleteService = async (req, res) => {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//Ordenar las habitaciones por Hotel//
+exports.getReservationsUser = async (req, res) => {
+    try 
+    {
+        const userID = req.user.sub
+        const reservations = await Reservation.find({user: userID }).populate('hotel user room');
+        return res.send({ reservations })
+    } 
+    catch (err) 
+    {
+        console.log(err);
+    }
+}
 
 //Eliminar una Reservación  //
 exports.deleteReservation = async (req, res) => {
@@ -305,4 +291,7 @@ exports.deleteReservation = async (req, res) => {
         return res.status(500).send({ err, message: 'Error deleting Reservation' });
 
     }
+
+
+    
 }

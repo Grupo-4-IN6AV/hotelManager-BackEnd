@@ -5,12 +5,14 @@ const mongoose = require('mongoose');
 
 const reservationSchema = mongoose.Schema(
     {
+        state: String,
         entryDate: Date,
         exitDate: Date,
         totalDays: Number,
         totalNights: Number,
         user: {type: mongoose.Schema.ObjectId, ref : 'User'},
         NIT: String,
+        totalPersons: Number,
         room: {
                 room:{type: mongoose.Schema.ObjectId, ref : 'Room'}, 
                 price: Number,

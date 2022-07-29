@@ -14,6 +14,7 @@ const eventRoutes = require('../src/routes/event.routes');
 const contactRoutes = require('../src/routes/contact.routes')
 const typeRoomRoutes = require('../src/routes/typeRoom.routes')
 const roomRoutes = require('../src/routes/room.routes')
+const reservationRoutes = require('../src/routes/reservation.routes')
 
 /*Connect MultiParty*/
 const fs = require('fs')
@@ -41,7 +42,7 @@ app.use('/event', eventRoutes);
 app.use('/contact', contactRoutes);
 app.use('/typeRoom', typeRoomRoutes);
 app.use('/room', roomRoutes);
-
+app.use('/reservation', reservationRoutes);
 
 exports.initServer = ()=> app.listen(port, async ()=>
 {

@@ -13,10 +13,11 @@ api.get('/testReservation', reservationController.testReservation);
 
 
 //Admin Hotel//
-api.post('/createReservation', mdAuth.ensureAuth, reservationController.saveR);
+api.post('/saveReservation', mdAuth.ensureAuth, reservationController.saveR);
 api.post('/addServiceReservation/:id', mdAuth.ensureAuth, reservationController.addService);
 api.delete('/deleteReservation/:id', mdAuth.ensureAuth, reservationController.deleteReservation);
 api.delete('/deleteServiceReservation/:id', mdAuth.ensureAuth, reservationController.deleteService);
 
+api.get('/getReservationsUser', mdAuth.ensureAuth, reservationController.getReservationsUser);
 
 module.exports = api;

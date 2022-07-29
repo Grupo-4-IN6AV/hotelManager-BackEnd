@@ -89,10 +89,7 @@ exports.checkUpdated = async (user)=>{
 //Eliminación de Datos Innecesarios Carrito de Compras//
 exports.detailsShoppingCart = async(shoppingCartId)=>
 {   
-    const searchShoppingCart = await ShoppingCart.findOne({_id:shoppingCartId})
-    .populate('user')
-    .populate('products.product')
-    .lean();
+    const searchShoppingCart = await Reservation.findOne({_id:shoppingCartId})
 
     for(var key = 0; key < searchShoppingCart.products.length; key++)
     {
