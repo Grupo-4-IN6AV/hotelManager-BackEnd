@@ -19,6 +19,7 @@ api.get('/getServices', [mdAuth.ensureAuth, mdAuth.isAdmin], serviceController.g
 api.put('/updateService/:id', [mdAuth.ensureAuth, mdAuth.isAdmin], serviceController.updateService);
 api.delete('/deleteService/:id', [mdAuth.ensureAuth, mdAuth.isAdmin], serviceController.deleteService);
 api.post('/searchService', serviceController.searchService);
+api.get('/getServiceHotelID/:id', serviceController.getServiceHotelID);
 
 
 //ADMIN HOTEL//
@@ -28,5 +29,7 @@ api.post('/saveServiceHotel', [mdAuth.ensureAuth, mdAuth.isAdminHotel], serviceC
 api.put('/updateServiceHotel/:id', [mdAuth.ensureAuth, mdAuth.isAdminHotel], serviceController.updateService);
 api.put('/saveIconService/:id', [mdAuth.ensureAuth, mdAuth.isAdminHotel], serviceController.saveIconService);
 api.get('/getServiceHotel/:id', [mdAuth.ensureAuth, mdAuth.isAdminHotel], serviceController.getService);
+
+api.get('/getArrayServices', serviceController.getHotelsServices);
 
 module.exports = api;

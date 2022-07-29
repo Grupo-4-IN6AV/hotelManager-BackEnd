@@ -11,6 +11,7 @@ const hotelSchema = mongoose.Schema
         email: String,
         phone: String,
         admin: {type: mongoose.Schema.ObjectId, ref : 'User'},
+        image: String
     }
 );
 

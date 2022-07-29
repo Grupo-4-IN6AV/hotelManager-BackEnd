@@ -5,12 +5,17 @@ const express = require('express');
 const api = express.Router();
 const mdAuth = require('../middlewares/authenticated');
 
+
+//CARGAR IMAGENES/
+const connectMultiparty = require('connect-multiparty');
+const upload = connectMultiparty({uploadDir:'./uploads/rooms'});
+
 /*----------- R U T A S -----------*/
 
 
 //P Ú B L I C A S//
 api.get('/testRoom', roomController.testRoom);
-api.post('/searchRoom',[mdAuth.ensureAuth, mdAuth.isAdmin],roomController.getRoomName);
+api.post('/searchRoom',roomController.getRoomName);
 
 //Admin Hotel//
 api.get('/getRooms', [mdAuth.ensureAuth, mdAuth.isAdmin], roomController.getRooms);
@@ -25,7 +30,12 @@ api.delete('/deleteRoom/:id', [mdAuth.ensureAuth, mdAuth.isAdmin], roomControlle
 api.post('/saveRoomHotel', [mdAuth.ensureAuth, mdAuth.isAdminHotel],roomController.saveRoom);
 api.get('/getRoomsHotelAdmin', [mdAuth.ensureAuth, mdAuth.isAdminHotel], roomController.getRoomHotelAdmin);
 api.get('/getRoomByHotel/:id',roomController.getRoomHotel);
+api.get('/getRoomsPrice', roomController.getRoomsPriceHotel);
 api.put('/updateRoomHotel/:id',[mdAuth.ensureAuth, mdAuth.isAdminHotel],roomController.updateRoom);
 api.delete('/deleteRoomHotel/:id', [mdAuth.ensureAuth, mdAuth.isAdminHotel], roomController.deleteRoom);
+
+//IMAGENES//
+api.post('/uploadImageRoom/:id', [mdAuth.ensureAuth, upload], roomController.addImageRoom);
+api.get('/getImageRoom/:fileName',  upload, roomController.getImageRoom);
 
 module.exports = api;

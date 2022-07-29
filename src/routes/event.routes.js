@@ -5,6 +5,9 @@ const express = require('express');
 const api = express.Router();
 const mdAuth = require('../middlewares/authenticated');
 
+//CARGAR IMAGENES/
+const connectMultiparty = require('connect-multiparty');
+const upload = connectMultiparty({uploadDir:'./uploads/events'});
 
 //----------- R U T A S -----------//
 
@@ -23,5 +26,11 @@ api.delete('/deleteEvent/:id', [mdAuth.ensureAuth, mdAuth.isAdmin], eventControl
 api.post('/saveEventHotel', [mdAuth.ensureAuth, mdAuth.isAdminHotel], eventController.saveEvent);
 api.get('/getEventsHotel', [mdAuth.ensureAuth, mdAuth.isAdminHotel], eventController.getEventsHotel);
 api.delete('/deleteEventHotel/:id', [mdAuth.ensureAuth, mdAuth.isAdminHotel], eventController.deleteEvent);
+api.get('/getEventsHotelID/:id', eventController.getEventsHotelID);
+
+
+//IMAGENES//
+api.post('/uploadImageEvent/:id', [mdAuth.ensureAuth, upload], eventController.addImageEvent);
+api.get('/getImageEvent/:fileName',  upload, eventController.getImageEvent);
 
 module.exports = api;

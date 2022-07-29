@@ -80,4 +80,28 @@ exports.initServer = ()=> app.listen(port, async ()=>
             }
             console.log('Directory created successfully!');
     });
+
+    fs.mkdir(path.join(__dirname, '../uploads/events'),
+        { recursive: true }, (err) => {
+            if (err) {
+                return console.error(err);
+            }
+            console.log('Directory created successfully!');
+    });
+
+    fs.mkdir(path.join(__dirname, '../uploads/rooms'),
+        { recursive: true }, (err) => {
+            if (err) {
+                return console.error(err);
+            }
+            console.log('Directory created successfully!');
+    });
+
+    fs.mkdir(path.join(__dirname, '../uploads/hotels'),
+        { recursive: true }, (err) => {
+            if (err) {
+                return console.error(err);
+            }
+            console.log('Directory created successfully!');
+    });
 });

@@ -184,6 +184,23 @@ exports.getServiceHotel = async (req, res)=>
 }
 
 
+exports.getServiceHotelID = async (req, res)=>
+{
+    try
+    {
+        const hotel = req.params.id
+        const services = await Service.find({hotel: hotel}).populate('hotel');
+        if (!services) return res.send({message: 'Service not found'})
+        return res.send({message: 'Service:', services})
+    }
+    catch(err)
+    {
+        console.log(err); 
+        return err; 
+    }
+}
+
+
 //Agregar Tipo de Servicio//
 exports.saveIconService  = async (req, res)=>{
     try{
@@ -203,6 +220,28 @@ exports.saveIconService  = async (req, res)=>{
         return res.send({message: 'Icon Added Successfully', updatedService});
     
     }catch(err){
+        console.log(err); 
+        return err; 
+    }
+}
+
+
+//Mostrar todos los Hoteles//
+exports.getHotelsServices = async (req, res)=>{
+    try
+    {
+        var arrayServices = []
+        const hotels = await Hotel.find().populate('admin');
+        for (let hotel of hotels)
+        {
+            let servicesHotel = await Service.find({hotel:hotel._id})
+            arrayServices.push(servicesHotel)
+        }
+        return res.send({arrayServices})
+
+    }
+    catch(err)
+    {
         console.log(err); 
         return err; 
     }
