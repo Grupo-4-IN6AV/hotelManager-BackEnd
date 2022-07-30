@@ -384,10 +384,10 @@ exports.addImageUser=async(req,res)=>
         
         const filePath = req.files.image.path; 
        
-        const fileSplit = filePath.split('\\'); 
+        const fileSplit = filePath.split('/'); 
         const fileName = fileSplit[2]; 
 
-        const extension = fileName.split('\.'); 
+        const extension = fileName.split('.'); 
         const fileExt = extension[1]; 
 
         const validExt = await validExtension(fileExt, filePath);

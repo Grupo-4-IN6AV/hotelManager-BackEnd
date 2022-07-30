@@ -469,36 +469,13 @@ exports.getReservation = async (req,res) =>
     try
     {
         const reservationID = req.params.id
-        const reservation = await Reservation.findOne({_id:reservationID}).populate('hotel room.room user');
+        const reservation = await Reservation.findOne({_id:reservationID}).populate('hotel room.room');
         let services = [];
-        console.log(reservation.services)
         for(let serviceId of reservation.services){
             const service = await Service.findOne({_id: serviceId.service}).populate('hotel');
             services.push(service)
         }
         return res.send({reservation, services})
-    }
-    catch(err)
-    {
-        console.log(err);
-        return res.status(500).send({ message: 'Error getting la Reservations.' });
-    }
-}
-
-
-exports.getBill = async (req,res) =>
-{
-    try
-    {
-        const billID = req.params.id
-        const bill = await Bill.findOne({_id:billID}).populate('hotel room.room user');
-        let services = [];
-        console.log(bill.services)
-        for(let serviceId of bill.services){
-            const service = await Service.findOne({_id: serviceId.service}).populate('hotel');
-            services.push(service)
-        }
-        return res.send({bill, services})
     }
     catch(err)
     {
@@ -515,29 +492,11 @@ exports.deleteReservation = async (req, res) => {
         const reservationExist = await Reservation.findOne({ _id: reservationID });
         if (!reservationExist) return res.status(400).send({ message: 'Reservation not found or already deleted.' });
 
-        const date = new Date();
-        const dateLocal = (date).toLocaleString('UTC', { timeZone: 'America/Guatemala' });
-        const splitDate = dateLocal.split(' ');
-        const splitDateOne = splitDate[0].split('/');
-        if (splitDateOne[0] < 10) {
-            splitDateOne[0] = '0' + splitDateOne[0];
-        }
-        if (splitDateOne[1] < 10) {
-            splitDateOne[1] = '0' + splitDateOne[1];
-        }
-        const setDate = splitDateOne[2] + '-' + splitDateOne[1] + '-' + splitDateOne[0];
-        const setDateRoom = new Date(setDate);
-
-
         const reservationExisted = await Reservation.find({ _id: reservationID });
-        for (let reservationDeleted of reservationExisted) {
-
-            const idUpdatedRoom = await Room.findByIdAndUpdate({ _id: reservationDeleted.room.room }, { state: false }, { dateAvailable: setDateRoom });
-
-        }
+        if(!reservationExisted) return res.status(400).send({message: 'Error canceling reservation'})
 
         const reservationDeleted = await Reservation.findOneAndDelete({ _id: reservationID });
-        return res.send({ message: 'Delete Reservation.', reservationDeleted });
+        return res.send({ message: 'Your booking cancellation is successfully.', reservationDeleted });
 
     } catch (err) {
         console.log(err);
