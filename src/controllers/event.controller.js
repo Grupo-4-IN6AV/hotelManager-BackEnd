@@ -23,6 +23,7 @@ exports.saveEvent = async (req, res) => {
             description: params.name,
             date: params.date,
             hotel: params.hotel,
+            typeEvent: params.typeEvent,
             startHour: params.startHour,
             endHour: params.endHour
         };
@@ -93,6 +94,7 @@ exports.updateEvent = async (req, res) => {
 
         const data = {
             name: params.name,
+            typeEvent: params.typeEvent,
             description: params.name,
             date: params.date,
             startHour: params.startHour,
