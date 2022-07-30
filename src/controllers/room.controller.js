@@ -269,17 +269,17 @@ exports.addImageRoom = async (req, res) => {
 
         const filePath = req.files.image.path;
 
-        const fileSplit = filePath.split('\\');
+        const fileSplit = filePath.split('/');
         const fileName = fileSplit[2];
 
-        const extension = fileName.split('\.');
+        const extension = fileName.split('.');
         const fileExt = extension[1];
 
         const validExt = await validExtension(fileExt, filePath);
         if (validExt === false) return res.status(400).send('Invalid extension');
         const updateRoom = await Room.findOneAndUpdate({ _id: roomID }, { image: fileName }, { new: true }).lean();
-        if (!updateRoom) return res.status(404).send({ message: 'Event not found' });
-        return res.send(updateRoom);
+        if (!updateRoom) return res.status(404).send({ message: 'Room not found' });
+        return res.send({message: 'added image', updateRoom});
     }
     catch (err) {
         console.log(err);

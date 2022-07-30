@@ -246,17 +246,17 @@ exports.addImageHotel = async (req, res) => {
 
         const filePath = req.files.image.path;
 
-        const fileSplit = filePath.split('\\');
+        const fileSplit = filePath.split('/');
         const fileName = fileSplit[2];
 
-        const extension = fileName.split('\.');
+        const extension = fileName.split('.');
         const fileExt = extension[1];
 
         const validExt = await validExtension(fileExt, filePath);
         if (validExt === false) return res.status(400).send('Invalid extension');
         const updateHotel = await Hotel.findOneAndUpdate({ _id: hotelID }, { image: fileName }, { new: true }).lean();
         if (!updateHotel) return res.status(404).send({ message: 'Event not found' });
-        return res.send(updateHotel);
+        return res.send({message: 'Hotel image added sucessfully',updateHotel});
     }
     catch (err) {
         console.log(err);

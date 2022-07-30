@@ -223,17 +223,17 @@ exports.addImageEvent = async (req, res) => {
 
         const filePath = req.files.image.path;
 
-        const fileSplit = filePath.split('\\');
+        const fileSplit = filePath.split('/');
         const fileName = fileSplit[2];
 
-        const extension = fileName.split('\.');
+        const extension = fileName.split('.');
         const fileExt = extension[1];
 
         const validExt = await validExtension(fileExt, filePath);
         if (validExt === false) return res.status(400).send('Invalid extension');
         const updateEvent = await Event.findOneAndUpdate({ _id: eventID }, { image: fileName }, { new: true }).lean();
         if (!updateEvent) return res.status(404).send({ message: 'Event not found' });
-        return res.send(updateEvent);
+        return res.send({message: 'Event image added sucessfully',updateEvent});
     }
     catch (err) {
         console.log(err);
