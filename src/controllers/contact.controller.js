@@ -8,20 +8,21 @@ exports.sendMessage = async (req, res) => {
     try {
         const params = req.body;
         let contentHTML = `
-            <h1>User Information</h1>
+            <h1>Hotel Manager</h1>
+            <h3>User Information</h3>
             <ul>
                 <li>Name: ${params.username} </li>
                 <li>Email: ${params.email} </li>
                 <li>Phone: ${params.phone} </li>
             </ul>
-            <h1>Message</h1>
+            <h3>Message</h3>
             <p>Message: ${params.message}</P>
         `;
 
-        const CLIENTID = "546188062863-vgrpmo26hpifrmpto1bualpic11rtcm8.apps.googleusercontent.com";
-        const CLIENT_SECRET = "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";
+        const CLIENTID = "1037963197907-0gvhoh950i741hg8rcard6t0gqib72uu.apps.googleusercontent.com";
+        const CLIENT_SECRET = "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";
         const REDIRECT_URI = "https://developers.google.com/oauthplayground";
-        const REFRESH_TOKEN = "1//04FjufUsCiLdGCgYIARAAGAQSNwF-L9IrUUFTAF1cpLnz02S1fmf_UlxPAC7Cn8jxb7OxWeFTeQ1SOw5AyX2pt_wfuk68IHaYw_k";
+        const REFRESH_TOKEN = "1//04MTSc3qe4k1xCgYIARAAGAQSNwF-L9Irny5K7MyAN3plPMwd3Y5tFFUoTo0Sx1Wgb2Icenx8R9xsczNEMHTrkLY72j31v3t6tjA";
 
         const oAuth2Client = new google.auth.OAuth2(CLIENTID, CLIENT_SECRET, REDIRECT_URI);
 
@@ -34,7 +35,7 @@ exports.sendMessage = async (req, res) => {
                     service: "gmail",
                     auth: {
                         type: "OAuth2",
-                        user: "hotelsmanagertechnicalservice@gmail.com",
+                        user: "hotelmanagerdb@gmail.com",
                         clientId: CLIENTID,
                         clientSecret: CLIENT_SECRET,
                         refreshToken: REFRESH_TOKEN,
@@ -42,8 +43,8 @@ exports.sendMessage = async (req, res) => {
                     }
                 });
                 const mailOptions = {
-                    from: "Hotel Manager <hotelsmanagertechnicalservice@gmail.com>",
-                    to: "hotelsmanagertechnicalservice@gmail.com",
+                    from: "Hotel Manager <hotelmanagerdb@gmail.com>",
+                    to: "hotelmanagerdb@gmail.com",
                     subject: "Contact Us Message",
                     html: contentHTML
                 };
