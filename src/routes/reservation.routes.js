@@ -26,6 +26,6 @@ api.get('/getReservationsUser', mdAuth.ensureAuth, reservationController.getRese
 api.get('/getReservationsManager', mdAuth.ensureAuth, reservationController.getReservationsManager);
 api.get('/getReservationsHotel/:id', mdAuth.ensureAuth, reservationController.getReservationsHotel);
 api.get('/getReservationsExtra', mdAuth.ensureAuth, reservationController.getReservationsExtra);
-
+api.get('/getBill/:id', mdAuth.ensureAuth, reservationController.getBill);
 
 module.exports = api;

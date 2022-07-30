@@ -290,12 +290,12 @@ exports.addServiceUser = async (req, res) => {
                 subTotal: newReservation.subTotal,
                 total: newReservation.total
             }
-            const addBill = new Bill(pushBill);
+            var addBill = new Bill(pushBill);
             await addBill.save();
             if (!newReservation) return res.status(400).send({ message: 'Error adding services' })
         }
         const reservationExistFinal = await Reservation.findOne({_id:reservationId})
-        return res.send({ message: 'Added New Service to Reservation.',  reservationExistFinal})
+        return res.send({ message: 'Added New Service to Reservation.',  reservationExistFinal, addBill})
     } catch (err) {
         console.log(err);
         return res.status(500).send({ message: 'Error adding services.' });
@@ -491,7 +491,7 @@ exports.getBill = async (req,res) =>
     try
     {
         const billID = req.params.id
-        const bill = await Bill.findOne({_id:billID}).populate('hotel room.room');
+        const bill = await Bill.findOne({_id:billID}).populate('hotel room.room user');
         let services = [];
         console.log(bill.services)
         for(let serviceId of bill.services){
