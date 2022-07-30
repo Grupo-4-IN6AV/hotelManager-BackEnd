@@ -125,7 +125,7 @@ exports.saveR = async (req, res) => {
         //Actualizar la fecha disponible//
         //const updateDateAvailable = await Room.findOneAndUpdate({ _id: params.room }, { dateAvailable: finishDateExit }, { new: true });
         const updateSaleRoom = await Room.findOneAndUpdate({ _id: params.room }, { $inc: { sales: 1 } }, { new: true });
-
+        const updateHotel = await Hotel.findOneAndUpdate({ _id: params.hotel }, { $inc: { visits: 1 } }, { new: true });
 
         //Actualizar Estado de las Habitaciones//
         //const updateStateRoom = await Room.findOneAndUpdate({ _id: params.room }, { state: true }, { new: true });
@@ -143,7 +143,7 @@ exports.getReservations = async (req,res) =>
 {
     try
     {
-        const reservations = await Reservation.find({});
+        const reservations = await Reservation.find({}).populate('room.room hotel user');
         return res.send({reservations})
     }
     catch(err)
@@ -406,7 +406,19 @@ exports.deleteService = async (req, res) => {
 exports.getReservationsUser = async (req, res) => {
     try {
         const userID = req.user.sub
-        const reservations = await Reservation.find({ user: userID }).populate('hotel room.room services.service')
+        const reservations = await Reservation.find({ user: userID }).populate('hotel room.room user')
+        return res.send({ reservations })
+    }
+    catch (err) {
+        console.log(err);
+    }
+}
+
+
+exports.getReservationsHotel = async (req, res) => {
+    try {
+        const hotel = req.params.id
+        const reservations = await Reservation.find({ hotel: hotel }).populate('hotel room.room user')
         return res.send({ reservations })
     }
     catch (err) {
@@ -419,6 +431,18 @@ exports.getHistoryUser = async (req, res) => {
     try {
         const userID = req.user.sub
         const reservations = await Reservation.find({ user: userID }).sort({exitDate:'asc'}).populate('hotel room.room')
+        return res.send({ reservations })
+    }
+    catch (err) {
+        console.log(err);
+    }
+}
+
+exports.getReservationsExtra = async (req, res) => {
+    try {
+        const administrator = req.user.sub
+        const hotel = await Hotel.findOne({admin:administrator})
+        const reservations = await Reservation.find({ hotel: hotel._id }).populate('room.room hotel user')
         return res.send({ reservations })
     }
     catch (err) {
@@ -445,7 +469,7 @@ exports.getReservation = async (req,res) =>
     try
     {
         const reservationID = req.params.id
-        const reservation = await Reservation.findOne({_id:reservationID}).populate('hotel room.room');
+        const reservation = await Reservation.findOne({_id:reservationID}).populate('hotel room.room user');
         let services = [];
         console.log(reservation.services)
         for(let serviceId of reservation.services){
@@ -453,6 +477,28 @@ exports.getReservation = async (req,res) =>
             services.push(service)
         }
         return res.send({reservation, services})
+    }
+    catch(err)
+    {
+        console.log(err);
+        return res.status(500).send({ message: 'Error getting la Reservations.' });
+    }
+}
+
+
+exports.getBill = async (req,res) =>
+{
+    try
+    {
+        const billID = req.params.id
+        const bill = await Bill.findOne({_id:billID}).populate('hotel room.room');
+        let services = [];
+        console.log(bill.services)
+        for(let serviceId of bill.services){
+            const service = await Service.findOne({_id: serviceId.service}).populate('hotel');
+            services.push(service)
+        }
+        return res.send({bill, services})
     }
     catch(err)
     {

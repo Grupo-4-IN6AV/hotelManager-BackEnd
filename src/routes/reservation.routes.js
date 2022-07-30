@@ -20,9 +20,12 @@ api.delete('/deleteServiceReservation/:id', mdAuth.ensureAuth, reservationContro
 api.get('/getReservations', mdAuth.ensureAuth, reservationController.getReservations);
 api.get('/getHistory', mdAuth.ensureAuth, reservationController.getHistoryUser);
 api.get('/getReservation/:id', mdAuth.ensureAuth, reservationController.getReservation);
-
+api.get('/getBill/:id', mdAuth.ensureAuth, reservationController.getBill);
 
 api.get('/getReservationsUser', mdAuth.ensureAuth, reservationController.getReservationsUser);
 api.get('/getReservationsManager', mdAuth.ensureAuth, reservationController.getReservationsManager);
+api.get('/getReservationsHotel/:id', mdAuth.ensureAuth, reservationController.getReservationsHotel);
+api.get('/getReservationsExtra', mdAuth.ensureAuth, reservationController.getReservationsExtra);
+
 
 module.exports = api;

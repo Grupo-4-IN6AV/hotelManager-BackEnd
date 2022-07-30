@@ -99,6 +99,13 @@ exports.delete = async(req, res)=>{
         const userId = req.params.id;
         const persmission = await checkPermission(userId, req.user.sub);
         if(persmission === false) return res.status(403).send({message: 'You dont have permission to delete this user'});
+
+        const reservationsExist = await Reservation.find({ user: userId });
+        for (let reservationDeleted of reservationsExist) 
+        {
+            const deleteReservation = await Reservation.findOneAndDelete({ _id: reservationDeleted._id });
+        }
+
         const userDeleted = await User.findOneAndDelete({_id: userId});
         if(userDeleted) return res.send({message: 'Account deleted', userDeleted});
         return res.send({message: 'User not found or already deleted'});
@@ -219,7 +226,7 @@ exports.deleteUser = async(req, res)=>{
         const reservationsExist = await Reservation.find({ user: userId });
         for (let reservationDeleted of reservationsExist) 
         {
-            const deleteReservation = await Reservation.findOneAndDelete({ hotel: hotelId });
+            const deleteReservation = await Reservation.findOneAndDelete({ _id: reservationDeleted._id });
         }
 
         return res.send({message: 'User deleted Successfully', userDeleted})
