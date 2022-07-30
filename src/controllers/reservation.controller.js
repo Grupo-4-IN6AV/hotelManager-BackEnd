@@ -492,10 +492,10 @@ exports.getBill = async (req,res) =>
     {
         const billID = req.params.id
         const bill = await Bill.findOne({_id:billID}).populate('hotel room.room user');
-        let services = [];
+        var services = [];
         console.log(bill.services)
         for(let serviceId of bill.services){
-            const service = await Service.findOne({_id: serviceId.service}).populate('hotel');
+            const service = await Service.findOne({_id: serviceId.service})
             services.push(service)
         }
         return res.send({bill, services})
