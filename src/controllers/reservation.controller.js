@@ -102,6 +102,7 @@ exports.saveR = async (req, res) => {
 
         const checkdata = {
             user: req.user.sub,
+            state: 'On Going',
             room: setRoom,
             hotel: params.hotel,
             entryDate: finishDateEntry,
@@ -176,8 +177,8 @@ exports.addService = async (req, res) => {
         if (!reservationExist)
             return res.status(400).send({ message: 'Reservation not found' });
 
-
-        const setService = {
+        const setService = 
+        {
             service: data.services,
             price: serviceExist.price,
         }

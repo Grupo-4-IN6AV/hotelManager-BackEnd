@@ -1,6 +1,7 @@
 'use strict'
 
 const User = require('../models/user.model');
+const Reservation = require('../models/reservation.model');
 
 const {validateData, encrypt, alreadyUser, checkPassword, 
     checkUpdate, checkPermission, checkUpdateAdmin, validExtension} = require('../utils/validate');
@@ -213,6 +214,14 @@ exports.deleteUser = async(req, res)=>{
         if(userExist.role === 'ADMIN') return res.status(400).send({message: ' Could not deleted User with ADMIN role'});
         const userDeleted = await User.findOneAndDelete({_id: userId});
         if(!userDeleted) return res.status(400).send({message: 'User not deleted'});
+
+
+        const reservationsExist = await Reservation.find({ user: userId });
+        for (let reservationDeleted of reservationsExist) 
+        {
+            const deleteReservation = await Reservation.findOneAndDelete({ hotel: hotelId });
+        }
+
         return res.send({message: 'User deleted Successfully', userDeleted})
     }catch(err) {
         console.log(err);
