@@ -275,10 +275,22 @@ exports.addServiceUser = async (req, res) => {
             const pushBill = 
             {
                 date: dateNow,
-                numberBill: totalBills,
-                newReservation,
+                numberBill: parseInt(totalBills + 1001),
+                entryDate: newReservation.entryDate,
+                exitDate: newReservation.exitDate,
+                totalDays: newReservation.totalDays,
+                totalNights: newReservation.totalNights,
+                user: newReservation.user,
+                NIT: newReservation.NIT,
+                totalPersons: newReservation.totalPersons,
+                room: newReservation.room,
+                services: newReservation.services,
+                hotel: newReservation.hotel,
+                IVA: newReservation.IVA,
+                subTotal: newReservation.subTotal,
+                total: newReservation.total
             }
-            const addBill = new Biil(pushBill);
+            const addBill = new Bill(pushBill);
             await addBill.save();
             if (!newReservation) return res.status(400).send({ message: 'Error adding services' })
         }
@@ -434,7 +446,13 @@ exports.getReservation = async (req,res) =>
     {
         const reservationID = req.params.id
         const reservation = await Reservation.findOne({_id:reservationID}).populate('hotel room.room');
-        return res.send({reservation})
+        let services = [];
+        console.log(reservation.services)
+        for(let serviceId of reservation.services){
+            const service = await Service.findOne({_id: serviceId.service}).populate('hotel');
+            services.push(service)
+        }
+        return res.send({reservation, services})
     }
     catch(err)
     {
