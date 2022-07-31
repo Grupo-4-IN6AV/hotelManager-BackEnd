@@ -168,19 +168,6 @@ exports.getRoomsAvailables = async (req, res) => {
 }
 
 
-
-//Mostrar las Habitaciones Ocupadas//
-exports.getRoomsNotAvailables = async (req, res) => {
-    try {
-        const rooms = await Room.find({ state: true });
-        return res.send({ message: 'Rooms:', rooms })
-    } catch (err) {
-        console.log(err);
-        return err;
-    }
-}
-
-
 //Actualizar una Habitación//
 exports.updateRoom = async (req, res) => {
     try {
