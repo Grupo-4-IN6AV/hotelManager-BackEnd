@@ -4,10 +4,10 @@ const Reservation = require('../models/reservation.model');
 const Room = require('../models/room.model');
 const Hotel = require('../models/hotel.model');
 const Service = require('../models/service.model');
+const Bill = require('../models/bill.model');
 
 const { validateData, detailsShoppingCart } = require('../utils/validate');
 const typeRoomModel = require('../models/typeRoom.model');
-const { findOne } = require('../models/hotel.model');
 
 
 
@@ -120,9 +120,11 @@ exports.saveR = async (req, res) => {
 
         const addReservation = new Reservation(checkdata);
         await addReservation.save();
+
+
         //Actualizar la fecha disponible//
         //const updateDateAvailable = await Room.findOneAndUpdate({ _id: params.room }, { dateAvailable: finishDateExit }, { new: true });
-        //const updateSaleRoom = await Room.findOneAndUpdate({ _id: params.room }, { $inc: { sales: 1 } }, { new: true });
+        const updateSaleRoom = await Room.findOneAndUpdate({ _id: params.room }, { $inc: { sales: 1 } }, { new: true });
 
 
         //Actualizar Estado de las Habitaciones//
@@ -253,6 +255,27 @@ exports.addServiceUser = async (req, res) => {
                     total: total
                 },
                 { new: true });
+
+            
+            const dateLocalOne = new Date();
+            const dateLocal = (dateLocalOne).toLocaleString('UTC', { timeZone: 'America/Guatemala' });
+            const splitDate = dateLocal.split(' ');
+            const splitDateOne = splitDate[0].split('/');
+            if (splitDateOne[0] < 10) {
+                    splitDateOne[0] = '0' + splitDateOne[0];
+                }
+                if (splitDateOne[1] < 10) {
+                    splitDateOne[1] = '0' + splitDateOne[1];
+                }
+            const setDate = splitDateOne[2] + '-' + splitDateOne[1] + '-' + splitDateOne[0];
+            const dateNow = new Date(setDate);
+            
+            const pushBill = 
+            {
+                date: dateNow,
+                newReservation,
+            }
+            
             if (!newReservation) return res.status(400).send({ message: 'Error adding services' })
         }
         const reservationExistFinal = await Reservation.findOne({_id:reservationId})
@@ -367,7 +390,7 @@ exports.deleteService = async (req, res) => {
 exports.getReservationsUser = async (req, res) => {
     try {
         const userID = req.user.sub
-        const reservations = await Reservation.find({ user: userID }).populate('hotel room.room')
+        const reservations = await Reservation.find({ user: userID }).populate('hotel room.room services.service')
         return res.send({ reservations })
     }
     catch (err) {
