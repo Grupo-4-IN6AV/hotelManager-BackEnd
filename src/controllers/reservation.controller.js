@@ -405,7 +405,7 @@ exports.getReservation = async (req,res) =>
     try
     {
         const reservationID = req.params.id
-        const reservation = await Reservation.find({_id:reservationID}).populate('hotel room.room');
+        const reservation = await Reservation.findOne({_id:reservationID}).populate('hotel room.room');
         return res.send({reservation})
     }
     catch(err)
