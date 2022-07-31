@@ -14,7 +14,7 @@ api.get('/testReservation', reservationController.testReservation);
 
 //Admin Hotel//
 api.post('/saveReservation', mdAuth.ensureAuth, reservationController.saveR);
-api.post('/addServiceReservation/:id', mdAuth.ensureAuth, reservationController.addService);
+api.post('/addServiceReservation/:id', mdAuth.ensureAuth, reservationController.addServiceUser);
 api.delete('/deleteReservation/:id', mdAuth.ensureAuth, reservationController.deleteReservation);
 api.delete('/deleteServiceReservation/:id', mdAuth.ensureAuth, reservationController.deleteService);
 
