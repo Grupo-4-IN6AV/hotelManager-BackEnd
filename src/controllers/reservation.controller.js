@@ -269,13 +269,17 @@ exports.addServiceUser = async (req, res) => {
                 }
             const setDate = splitDateOne[2] + '-' + splitDateOne[1] + '-' + splitDateOne[0];
             const dateNow = new Date(setDate);
+
+            const totalBills = await Bill.count().lean()
             
             const pushBill = 
             {
                 date: dateNow,
+                numberBill: totalBills,
                 newReservation,
             }
-            
+            const addBill = new Biil(pushBill);
+            await addBill.save();
             if (!newReservation) return res.status(400).send({ message: 'Error adding services' })
         }
         const reservationExistFinal = await Reservation.findOne({_id:reservationId})
