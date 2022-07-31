@@ -21,7 +21,6 @@ api.post('/searchRoom',roomController.getRoomName);
 api.get('/getRooms', [mdAuth.ensureAuth, mdAuth.isAdmin], roomController.getRooms);
 api.get('/getRoom/:id', roomController.getRoom);
 api.get('/getRoomsAvalilables',[mdAuth.ensureAuth, mdAuth.isAdmin],roomController.getRoomsAvailables);
-api.get('/getRoomsNotAvalibles',[mdAuth.ensureAuth, mdAuth.isAdmin],roomController.getRoomsNotAvailables);
 api.post('/saveRoom', [mdAuth.ensureAuth, mdAuth.isAdmin],roomController.saveRoom);
 api.put('/updateRoom/:id',[mdAuth.ensureAuth, mdAuth.isAdmin],roomController.updateRoom);
 api.delete('/deleteRoom/:id', [mdAuth.ensureAuth, mdAuth.isAdmin], roomController.deleteRoom);

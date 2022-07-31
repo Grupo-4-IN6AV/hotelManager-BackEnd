@@ -19,7 +19,7 @@ api.post('/saveEvent', [mdAuth.ensureAuth, mdAuth.isAdmin], eventController.save
 api.get('/getEvent/:id',  eventController.getEvent);
 api.get('/getEvents', eventController.getEvents);
 api.post('/getEventsName', eventController.searchEvents);
-api.post('/updateEvent/:id', [mdAuth.ensureAuth, mdAuth.isAdminHotel], eventController.updateEvent);
+api.put('/updateEvent/:id', [mdAuth.ensureAuth, mdAuth.isAdmin], eventController.updateEvent);
 api.delete('/deleteEvent/:id', [mdAuth.ensureAuth, mdAuth.isAdmin], eventController.deleteEvent);
 
 //ADMIN HOTEL//
@@ -27,6 +27,7 @@ api.post('/saveEventHotel', [mdAuth.ensureAuth, mdAuth.isAdminHotel], eventContr
 api.get('/getEventsHotel', [mdAuth.ensureAuth, mdAuth.isAdminHotel], eventController.getEventsHotel);
 api.delete('/deleteEventHotel/:id', [mdAuth.ensureAuth, mdAuth.isAdminHotel], eventController.deleteEvent);
 api.get('/getEventsHotelID/:id', eventController.getEventsHotelID);
+api.put('/updateEventHotel/:id', [mdAuth.ensureAuth, mdAuth.isAdminHotel], eventController.updateEvent);
 
 
 //IMAGENES//
