@@ -120,12 +120,12 @@ exports.saveR = async (req, res) => {
         const addReservation = new Reservation(checkdata);
         await addReservation.save();
         //Actualizar la fecha disponible//
-        const updateDateAvailable = await Room.findOneAndUpdate({ _id: params.room }, { dateAvailable: finishDateExit }, { new: true });
-        const updateSaleRoom = await Room.findOneAndUpdate({ _id: params.room }, { $inc: { sales: 1 } }, { new: true });
+        //const updateDateAvailable = await Room.findOneAndUpdate({ _id: params.room }, { dateAvailable: finishDateExit }, { new: true });
+        //const updateSaleRoom = await Room.findOneAndUpdate({ _id: params.room }, { $inc: { sales: 1 } }, { new: true });
 
 
         //Actualizar Estado de las Habitaciones//
-        const updateStateRoom = await Room.findOneAndUpdate({ _id: params.room }, { state: true }, { new: true });
+        //const updateStateRoom = await Room.findOneAndUpdate({ _id: params.room }, { state: true }, { new: true });
         return res.send({ message: 'Reservation Created Successfully', addReservation });
 
     }
@@ -187,7 +187,7 @@ exports.addService = async (req, res) => {
 
     } catch (err) {
         console.log(err);
-        return res.status(500).send({ message: 'Error agregando servicio.' });
+        return res.status(500).send({ message: 'Error adding service.' });
     }
 }
 
@@ -200,10 +200,11 @@ exports.addServiceUser = async (req, res) => {
             services: params.services
         };
 
+        console.log(data);
         let msg = validateData(data);
         if (msg) return res.status(400).send(msg);
 
-        for (let serviceId of services) {
+        for (let serviceId of params.services) {
             //Verificar que exista el Servicio en la Reservación//
             const serviceExistReservation = await Reservation.findOne({ $and: [{ _id: reservationId }, { 'services.service': serviceId }] });
             if (serviceExistReservation) return res.status(400).send({ message: 'Service is already in this Reservation' });
@@ -214,7 +215,7 @@ exports.addServiceUser = async (req, res) => {
         if (!reservationExist)
             return res.status(400).send({ message: 'Reservation not found' });
 
-        for (let serviceId of services) {
+        for (let serviceId of data.services) {
             const serviceExist = await Service.findOne({ _id: serviceId });
             if (!serviceExist) return res.status(400).send({ message: 'Service not found' });
 
@@ -231,7 +232,7 @@ exports.addServiceUser = async (req, res) => {
 
             const newReservation = await Reservation.findOneAndUpdate({ _id: reservationExist._id },
                 {
-                    $push: { service: setService },
+                    $push: { services: setService },
                     subTotal: subTotal,
                     IVA: IVATotal,
                     total: total
@@ -239,8 +240,8 @@ exports.addServiceUser = async (req, res) => {
                 { new: true });
             if (!newReservation) return res.status(400).send({ message: 'Error adding services' })
         }
-        const reservation = await detailsShoppingCart(reservationExist._id);
-        return res.send({ message: 'Added New Service to Reservation.', reservation })
+        const reservationExistFinal = await Reservation.findOne({_id:reservationId})
+        return res.send({ message: 'Added New Service to Reservation.',  reservationExistFinal})
     } catch (err) {
         console.log(err);
         return res.status(500).send({ message: 'Error adding services.' });
