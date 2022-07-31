@@ -136,6 +136,20 @@ exports.saveR = async (req, res) => {
 }
 
 
+exports.getReservations = async (req,res) =>
+{
+    try
+    {
+        const reservations = await Reservation.find({});
+        return res.send({reservations})
+    }
+    catch(err)
+    {
+        console.log(err);
+        return res.status(500).send({ message: 'Error getting la Reservations.' });
+    }
+}
+
 
 exports.addService = async (req, res) => {
     try {
@@ -361,6 +375,17 @@ exports.getReservationsUser = async (req, res) => {
 }
 
 
+exports.getHistoryUser = async (req, res) => {
+    try {
+        const userID = req.user.sub
+        const reservations = await Reservation.find({ user: userID }).sort({exitDate:'asc'}).populate('hotel room.room')
+        return res.send({ reservations })
+    }
+    catch (err) {
+        console.log(err);
+    }
+}
+
 //Ordenar las habitaciones por Hotel//
 exports.getReservationsManager = async (req, res) => {
     try {
@@ -371,6 +396,22 @@ exports.getReservationsManager = async (req, res) => {
     }
     catch (err) {
         console.log(err);
+    }
+}
+
+
+exports.getReservation = async (req,res) =>
+{
+    try
+    {
+        const reservationID = req.params.id
+        const reservation = await Reservation.find({_id:reservationID}).populate('hotel room.room');
+        return res.send({reservation})
+    }
+    catch(err)
+    {
+        console.log(err);
+        return res.status(500).send({ message: 'Error getting la Reservations.' });
     }
 }
 
